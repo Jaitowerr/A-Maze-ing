@@ -3,9 +3,11 @@
 import sys
 import os
 
+
 def programa(parse_config):
     print('Ejecutando programa...')
     print(parse_config)
+
 
 def init_sys() -> None:
     errores = []
@@ -40,5 +42,5 @@ def comprobar_config():
 if __name__ == '__main__':
     init_sys()
     from src.config_parser import parse_config
-    parse_config = parse_config(sys.argv[1])
+    parse_config = parse_config(sys.argv[1])   #objeto, listo para enviar a cualquier sitio
     programa(parse_config)
