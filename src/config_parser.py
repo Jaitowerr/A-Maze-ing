@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Tuple
+from typing import Optional
 import sys
 
 
@@ -50,11 +50,12 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
     try:
         exit_x, exit_y = map(int, dict_config['EXIT'].split(','))
     except ValueError:
-        errores.append('EXIT debe tener formato x,y de enteros. Ejemplo: 19,14')
-    
+        errores.append('EXIT debe tener formato x,y de enteros. '
+                       'Ejemplo: 19,14')
+
     if 'ENTRY' == 'EXIT' in dict_config:
         errores.append('ENTRY y EXIT no pueden ser iguales')
-    
+
     if dict_config['PERFECT'] not in ('True', 'False'):
         errores.append('PERFECT debe ser True o False')
     else:
@@ -74,10 +75,13 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
     display = dict_config.get('DISPLAY', None)
 
     if algorithm is not None and algorithm not in ALGORITMOS_VALIDOS:
-        errores.append(f'ALGORITHM no válido: {algorithm}. Opciones: {ALGORITMOS_VALIDOS}')
+        errores.append(
+            f'ALGORITHM no válido: {algorithm}. Opciones: {ALGORITMOS_VALIDOS}'
+        )
 
     if display is not None and display not in DISPLAYS_VALIDOS:
-        errores.append(f'DISPLAY no válido: {display}. Opciones: {DISPLAYS_VALIDOS}')
+        errores.append(
+            f'DISPLAY no válido: {display}. Opciones: {DISPLAYS_VALIDOS}')
 
     if errores:
         print('\nErrores en config.txt:')
@@ -91,14 +95,17 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
         errores.append('HEIGHT debe ser mayor que 0')
 
     if entry_x < 0 or entry_x >= width or entry_y < 0 or entry_y >= height:
-        errores.append(f'ENTRY ({entry_x},{entry_y}) fuera de rango (0-{width - 1}, 0-{height - 1})')
+        errores.append(
+            f'ENTRY ({entry_x},{entry_y}) fuera de rango (0-{width - 1}, '
+            f'0-{height - 1})')
 
     if exit_x < 0 or exit_x >= width or exit_y < 0 or exit_y >= height:
-        errores.append(f'EXIT ({exit_x},{exit_y}) fuera de rango (0-{width - 1}, 0-{height - 1})')
+        errores.append(
+            f'EXIT ({exit_x},{exit_y}) fuera de rango (0-{width - 1}, '
+            f'0-{height - 1})')
 
     if entry_x == exit_x and entry_y == exit_y:
         errores.append('ENTRY y EXIT no pueden ser la misma casilla')
-    
 
     if errores:
         print('\nErrores en config.txt:')
@@ -141,7 +148,7 @@ def parse_config(config_txt: str) -> MazeConfig:
                 continue
 
             key, value = line.split('=')[0], line.split('=')[1]
-            
+
             if not key:
                 errores.append(f'Clave vacía en línea: "{line}"')
                 continue
