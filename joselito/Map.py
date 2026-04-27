@@ -35,8 +35,8 @@ class Map(BaseModel):
     @model_validator(mode='after')
     def iniciando_grid(self):
         self.grid = [[1 for _ in range(self.WIDTH)] for _ in range(self.HEIGHT)]
-        self.grid[self.ENTRY[1]][self.ENTRY[0]] = 2
-        self.grid[self.EXIT[1]][self.EXIT[0]] = 2
+        #self.grid[self.ENTRY[1]][self.ENTRY[0]] = 2
+        #self.grid[self.EXIT[1]][self.EXIT[0]] = 2
         return self
 
     def celda_valida(self, x, y):
@@ -61,11 +61,11 @@ class Map(BaseModel):
         for i in range(self.WIDTH):
             for j in range(self.HEIGHT):
                 if self.grid[j][i] == 1:
-                    pygame.draw.rect(screen, (0,0,0), (i*dimension, j*dimension, dimension, dimension))
+                    pygame.draw.rect(screen, (25,25,166), (i*dimension, j*dimension, dimension, dimension))
                 elif self.grid[j][i] == 2:
                     pygame.draw.rect(screen, (0,255,0), (i*dimension, j*dimension, dimension, dimension))
                 else:
-                    pygame.draw.rect(screen, (255,255,255), (i*dimension, j*dimension, dimension, dimension))
+                    pygame.draw.rect(screen, (0,0,0), (i*dimension, j*dimension, dimension, dimension))
     
     def render(self, dimension, screen):
         self.backtracking(self.ENTRY[0],self.ENTRY[1])

@@ -1,7 +1,10 @@
 import sys
 import logging
-from Map import Map
 import pygame
+from Map import Map
+from Player import Player
+from Menu import Menu
+from GameControl import GameControl
 
 logging.basicConfig(
     filename="app.log",
@@ -46,13 +49,27 @@ if __name__ == "__main__":
             clock = pygame.time.Clock()
             dimension = 32
             screen = pygame.display.set_mode((mapa.WIDTH*dimension, mapa.HEIGHT*dimension))
+            player = Player(mapa.ENTRY, 32)
+            menu = Menu(mapa.WIDTH*dimension, mapa.HEIGHT* dimension)
+            control = GameControl(mapa, player)
             while (True):
-                clock.tick(60)
+                clock.tick(30)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         exit()
-                mapa.render(dimension, screen)
+                    control.control(event)
+                screen.fill((0,0,0))
+                if control._estado == "Menu":
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        mousePos = pygame.mouse.get_pos()
+                        if menu.botones["None"].clickeado(mousePos):
+                            control._estado = "Activo"
+                    menu.render(screen)
+                else:
+                    control.mover_jugador()
+                    mapa.render(dimension, screen)
+                    player.render(screen)
                 pygame.display.flip()
                 
 
