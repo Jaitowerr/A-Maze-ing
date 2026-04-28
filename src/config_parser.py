@@ -16,7 +16,12 @@ class MazeConfig:
     center_42: bool
     seed: Optional[int] = None
     algorithm: Optional[str] = None
-    display: Optional[str] = None
+    display: Optional[str] = 'mlx'
+    grid: list[list[int]] = None
+
+
+def iniciando_grid(mapa: MazeConfig):
+    mapa.grid = [[1 for _ in range(mapa.width)] for _ in range(mapa.height)]
 
 
 def _validar_y_construir(dict_config: dict) -> MazeConfig:

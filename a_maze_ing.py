@@ -38,6 +38,11 @@ def init_sys() -> None:
 
 if __name__ == '__main__':
     init_sys()
-    from src.config_parser import parse_config
+    from src.config_parser import parse_config, iniciando_grid
     parse_config = parse_config(sys.argv[1]) # objeto, listo para enviar a cualquier sitio
     programa(parse_config)
+    iniciando_grid(parse_config)
+    for i in range(parse_config.height):
+        for j in range(parse_config.width):
+            print(parse_config.grid[i][j], end=", ")
+        print()
