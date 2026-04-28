@@ -1,27 +1,6 @@
-from dataclasses import dataclass
-from typing import Optional
+from .map import MazeConfig
+
 import sys
-
-
-@dataclass
-class MazeConfig:
-    width: int
-    height: int
-    entry_x: int
-    entry_y: int
-    exit_x: int
-    exit_y: int
-    output_file: str
-    perfect: bool
-    center_42: bool
-    seed: Optional[int] = None
-    algorithm: Optional[str] = None
-    display: Optional[str] = 'mlx'
-    grid: list[list[int]] = None
-
-
-def iniciando_grid(mapa: MazeConfig):
-    mapa.grid = [[1 for _ in range(mapa.width)] for _ in range(mapa.height)]
 
 
 def _validar_y_construir(dict_config: dict) -> MazeConfig:
@@ -77,7 +56,7 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
     DISPLAYS_VALIDOS = ('mlx', 'ascii')
 
     algorithm = dict_config.get('ALGORITHM', None)
-    display = dict_config.get('DISPLAY', None)
+    display = dict_config.get('DISPLAY', 'mlx')
 
     if algorithm is not None and algorithm not in ALGORITMOS_VALIDOS:
         errores.append(
