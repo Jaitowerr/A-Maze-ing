@@ -6,8 +6,10 @@ from typing import Optional
 class MazeConfig:
     width: int
     height: int
+    entry_x_y: list[int, int]
     entry_x: int
     entry_y: int
+    exit_x_y: list[int, int]
     exit_x: int
     exit_y: int
     output_file: str
@@ -21,6 +23,8 @@ class MazeConfig:
     def __post_init__(self):
         self.iniciando_grid()
         self.construir_42()
+        self.añadir_cuadricula()
+        self.proteger_42()
         self.añadir_marco()
 
     def iniciando_grid(self) -> None:
@@ -56,7 +60,7 @@ class MazeConfig:
             for c in range(pat_w):
                 if row[c] == "X":
                     if self.grid[top + r][left + c] == 1:
-                        self.grid[top + r][left + c] = 'O'  # ó
+                        self.grid[top + r][left + c] = 2
 
     def añadir_marco(self):
         top = [2] * self.width
@@ -70,7 +74,7 @@ class MazeConfig:
         for row in self.grid:
             row.insert(0, 2)
             row.append(2)
-        
+
         self.entry_y += 1
         self.exit_y += 1
         self.entry_x += 1
@@ -78,5 +82,70 @@ class MazeConfig:
         self.width += 2
         self.height += 2
 
-    def añadir_cuadricula(self):
-        pass
+    def añadir_cuadricula(self) -> None:
+
+        old_h = len(self.grid)
+        # old_w = max(len(r) for r in self.grid) if old_h > 0 else 0
+
+        new_grid = []
+
+        for i, old_row in enumerate(self.grid):
+            new_row = []
+            for j, cell in enumerate(old_row):
+                new_row.append(cell)
+                if j != len(old_row) - 1:
+                    new_row.append(3)
+            new_grid.append(new_row)
+
+            # if i != old_h - 1:
+            #     sep_row = [3] * len(new_row)
+            #     new_grid.append(sep_row)
+
+            if i != old_h - 1:
+                # fila separadora: 3, espacio, 3, espacio, ...
+                sep_row = [3 if k %
+                           2 == 0 else ' ' for k in range(len(new_row))]
+                new_grid.append(sep_row)
+
+        self.grid = new_grid
+
+        self.height = len(self.grid)
+        self.width = max(len(r) for r in self.grid) if self.height > 0 else 0
+
+        self.entry_x = self.entry_x * 2
+        self.exit_x = self.exit_x * 2
+        self.entry_y = self.entry_y * 2
+        self.exit_y = self.exit_y * 2
+
+    def proteger_42(self) -> None:
+
+        rows = len(self.grid)
+
+        to_set = set()  # conjunto de (r,c) a cambiar a 2
+
+        for r in range(rows):
+            row = self.grid[r]
+            for c in range(len(row)):
+                if row[c] == 2:
+                    # izquierda
+                    if c - 1 >= 0 and self.grid[r][c - 1] == 3:
+                        to_set.add((r, c - 1))
+                    # derecha
+                    if c + 1 < len(row) and self.grid[r][c + 1] == 3:
+                        to_set.add((r, c + 1))
+                    # arriba
+                    if r - 1 >= 0 and c < len(self.grid[r - 1]) and self.grid[r - 1][c] == 3:
+                        to_set.add((r - 1, c))
+                    # abajo
+                    if r + 1 < rows and c < len(self.grid[r + 1]) and self.grid[r + 1][c] == 3:
+                        to_set.add((r + 1, c))
+
+        # aplicar cambios
+        for (r, c) in to_set:
+            self.grid[r][c] = 2
+
+
+'''
+vale, escucha atentamente, ahora hay otra funion que es proteger_42
+esta funcion va a revisar si hay un 2 por ejemplo del 42, el 3 anterior y el 3 siguiente debe cambiarlo por ootro 2 y en su posicion en el array anterior en esa posicion cambiamos 
+'''
