@@ -41,5 +41,19 @@ if __name__ == '__main__':
     from src.config_parser import parse_config
     cfg = parse_config(sys.argv[1]) # objeto, listo para enviar a cualquier sitio
     # programa(cfg)
+    # cfg.print_grid()
+    print('-' * 55)
+    print('-' * 55)
+    from src.maze_generator import MazeGenerator
+    gen = MazeGenerator(cfg)
+    # gen.print_grid()
+    print('-' * 55)
+    print('-' * 55)
+    print('-' * 55)
+    print('-' * 55)
+    gen.algoritmo()
+    gen.print_grid()
+    # print('-' * 55)
+    # print('-' * 55)
+    # cfg.print_grid()
     
-    cfg.print_grid()

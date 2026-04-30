@@ -26,6 +26,7 @@ class MazeConfig:
         self.añadir_cuadricula()
         self.proteger_42()
         self.añadir_marco()
+        self.verificar_entrada_salida()
 
     def iniciando_grid(self) -> None:
         self.grid = [[1 for _ in range(self.width)]
@@ -117,7 +118,10 @@ class MazeConfig:
         self.entry_y = self.entry_y * 2
         self.exit_y = self.exit_y * 2
 
+
     def proteger_42(self) -> None:
+        if not self.center_42:
+            return
 
         rows = len(self.grid)
 
@@ -145,7 +149,30 @@ class MazeConfig:
             self.grid[r][c] = 2
 
 
-'''
-vale, escucha atentamente, ahora hay otra funion que es proteger_42
-esta funcion va a revisar si hay un 2 por ejemplo del 42, el 3 anterior y el 3 siguiente debe cambiarlo por ootro 2 y en su posicion en el array anterior en esa posicion cambiamos 
-'''
+    def verificar_entrada_salida(self):
+        import sys
+        errores = []
+ 
+        celda_entrada = self.grid[self.entry_y][self.entry_x]
+        celda_salida = self.grid[self.exit_y][self.exit_x]
+
+ 
+        if celda_entrada == 2:
+            errores.append(
+                f"Error: La entrada {self.entry_x_y} cae sobre una celda "
+                f"bloqueada (marco o patrón 42). Elige otra posición."
+            )
+ 
+        if celda_salida == 2:
+            errores.append(
+                f"Error: La salida {self.exit_x_y} cae sobre una celda "
+                f"bloqueada (marco o patrón 42). Elige otra posición."
+            )
+ 
+        if errores:
+            print("\nErrores en la configuración del laberinto:")
+            for e in errores:
+                print("  - ", e)
+            sys.exit(1)
+
+

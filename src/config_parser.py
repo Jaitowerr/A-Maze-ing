@@ -55,7 +55,8 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
     ALGORITMOS_VALIDOS = ('recursive_backtracker',)
     DISPLAYS_VALIDOS = ('mlx', 'ascii')
 
-    algorithm = dict_config.get('ALGORITHM', None)
+    # algorithm = dict_config.get('ALGORITHM', None)
+    algorithm = dict_config.get('ALGORITHM', 'recursive_backtracker')
     display = dict_config.get('DISPLAY', 'mlx')
 
     if algorithm is not None and algorithm not in ALGORITMOS_VALIDOS:
