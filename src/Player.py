@@ -1,8 +1,7 @@
 class Player():
-    def __init__(self, direction: tuple[int,int]):
+    def __init__(self, direction: tuple[int,int], img):
         self._x, self._y = direction
-    
-    def set_x(self, num):
-        self._x += num
-    def set_y(self, num):
-        self._y += num
+        self._img = img
+
+    def render(self, m, win):
+        m.mlx_put_image_to_window(m.mlx_ptr, win, self._img,self._x,self._y)
