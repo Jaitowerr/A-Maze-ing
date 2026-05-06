@@ -1,21 +1,15 @@
 MLX_WHL = mlx_CLXV/mlx-2.2-py3-none-any.whl
-DISPLAY_VAL := $(shell grep -E '^DISPLAY=' config.txt | cut -d'=' -f2 | tr -d ' \r')
 
 install:
 	@poetry install
+	@poetry run pip show mlx > /dev/null 2>&1 || poetry run pip install --no-deps $(MLX_WHL)
 
-install-mlx:
-	@echo "Instalando mlx desde archivo local..."
-	@poetry run pip install $(MLX_WHL) --no-deps
-
-run: install
-	@if [ -z "$(DISPLAY_VAL)" ] || [ "$(DISPLAY_VAL)" = "mlx" ]; then \
-		echo "Display: mlx → instalando mlx..."; \
-		$(MAKE) install-mlx; \
-	fi
+run:
+	@$(MAKE) install
 	@poetry run python3 a_maze_ing.py config.txt
 
 debug:
+	@$(MAKE) install
 	@poetry run python3 -m pdb a_maze_ing.py config.txt
 
 clean:
@@ -33,4 +27,4 @@ lint-strict:
 test:
 	@poetry run pytest
 
-.PHONY: install install-mlx run debug clean lint lint-strict test
+.PHONY: install run debug clean lint lint-strict test
