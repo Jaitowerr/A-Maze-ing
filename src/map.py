@@ -62,7 +62,7 @@ class MazeConfig:
             for c in range(pat_w):
                 if row[c] == "X":
                     if self.grid[top + r][left + c] == 1:
-                        self.grid[top + r][left + c] = 2
+                        self.grid[top + r][left + c] = 42
 
     def añadir_marco(self):
         top = [2] * self.width
@@ -131,7 +131,7 @@ class MazeConfig:
         for r in range(rows):
             row = self.grid[r]
             for c in range(len(row)):
-                if row[c] == 2:
+                if row[c] == 42:
                     # izquierda
                     if c - 1 >= 0 and self.grid[r][c - 1] == 3:
                         to_set.add((r, c - 1))

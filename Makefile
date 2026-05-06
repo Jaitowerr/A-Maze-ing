@@ -5,10 +5,20 @@ install:
 	@poetry run pip show mlx > /dev/null 2>&1 || poetry run pip install --no-deps $(MLX_WHL)
 
 run:
+	@clear
 	@$(MAKE) install
+	@echo "\033[1;33m"
+	@echo "  █████╗       ███╗   ███╗ █████╗ ███████╗███████╗      ██╗███╗   ██╗ ██████╗ "
+	@echo " ██╔══██╗      ████╗ ████║██╔══██╗╚══███╔╝██╔════╝      ██║████╗  ██║██╔════╝ "
+	@echo " ███████║█████╗██╔████╔██║███████║  ███╔╝ █████╗  █████╗██║██╔██╗ ██║██║  ███╗"
+	@echo " ██╔══██║╚════╝██║╚██╔╝██║██╔══██║ ███╔╝  ██╔══╝  ╚════╝██║██║╚██╗██║██║   ██║"
+	@echo " ██║  ██║      ██║ ╚═╝ ██║██║  ██║███████╗███████╗      ██║██║ ╚████║╚██████╔╝"
+	@echo " ╚═╝  ╚═╝      ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝      ╚═╝╚═╝  ╚═══╝ ╚═════╝ "
+	@echo "\033[1;32m"
 	@poetry run python3 a_maze_ing.py config.txt
 
 debug:
+	@clear
 	@$(MAKE) install
 	@poetry run python3 -m pdb a_maze_ing.py config.txt
 

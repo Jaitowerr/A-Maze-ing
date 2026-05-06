@@ -115,7 +115,6 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
         seed=seed,
         algorithm=algorithm,
         display=display,
-        cell_size=40
     )
 
 

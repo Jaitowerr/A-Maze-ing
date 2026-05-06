@@ -18,7 +18,25 @@ class MazeGenerator:
         if self.cfg.algorithm == 'recursive_backtracker':
             from .algorithm import recursive_backtracker
             ok = recursive_backtracker.run(self)
-        
+
+    def binario(self):
+        self.grid_binario = []
+        row = 1
+        while(row < len(self.grid) - 1):
+            fila_celdas = []
+            pos = 1
+            while(pos < len(self.grid[row]) - 1):
+                valor = self.grid[row][pos]
+                es_42 = (valor == 42)
+                oeste = 1 if self.grid[row][pos - 1] != 0 else 0
+                sur   = 1 if self.grid[row + 1][pos] != 0 else 0
+                este  = 1 if self.grid[row][pos + 1] != 0 else 0
+                norte = 1 if self.grid[row - 1][pos] != 0 else 0
+
+                fila_celdas.append(Celda(oeste, sur, este, norte, es_42))
+                pos += 2
+            self.grid_binario.append(fila_celdas)
+            row += 2
 
 
     def map_bin_hex(self):
@@ -32,7 +50,7 @@ class MazeGenerator:
                 end = ", " if idx < len(row) - 1 else ""
                 print(val, end=end)
             print()
-    
+
     def in_bounds(self, x, y):
         return 0 <= x < self.width and 0 <= y < self.height
 
