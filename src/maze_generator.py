@@ -12,12 +12,17 @@ class MazeGenerator:
         self.grid[self.cfg.exit_y][self.cfg.exit_x] = 5
         self.grid_binario = None
         self.grid_hexadecimal = None
+        self.camino = None
+        self.algoritmo()
+        self.binario()
+        self.hexadecimal()
 
     def algoritmo(self) -> None:
         random.seed(self.cfg.seed)
         if self.cfg.algorithm == 'recursive_backtracker':
             from .algorithm import recursive_backtracker
             ok = recursive_backtracker.run(self)
+
 
     def binario(self):
         self.grid_binario = []
@@ -38,11 +43,14 @@ class MazeGenerator:
             self.grid_binario.append(fila_celdas)
             row += 2
 
+    def hexadecimal(self):
+        self.grid_hexadecimal = []
+        for row in self.grid_binario:
+            fila_hexa = ''
+            for celda in row:
+                fila_hexa += celda.bin_to_hexa()
+            self.grid_hexadecimal.append(fila_hexa)
 
-    def map_bin_hex(self):
-        grid = self.grid
-        H = len(grid)
-        W = len(grid[0])
 
     def print_grid(self) -> None:
         for row in self.grid:
@@ -53,6 +61,15 @@ class MazeGenerator:
 
     def in_bounds(self, x, y):
         return 0 <= x < self.width and 0 <= y < self.height
+    
+    def docu_finish(self):
+        with open(self.cfg.output_file, 'w') as f:
+            for fila in self.grid_hexadecimal:
+                f.write(fila + '\n')
+            f.write('\n')
+            f.write(f'{self.cfg.entry_x_y[0]},{self.cfg.entry_x_y[1]}\n')
+            f.write(f'{self.cfg.exit_x_y[0]},{self.cfg.exit_x_y[1]}')
+            # f.write(self.camino)
 
     '''
     def get_cell(self, x, y) -> Celda:

@@ -91,6 +91,7 @@ if __name__ == '__main__':
     
     from src.maze_generator import MazeGenerator
     gen = MazeGenerator(cfg)
+    gen.docu_finish()
     m = Mlx()
     m.mlx_ptr = m.mlx_init()
     win = m.mlx_new_window(

@@ -1,0 +1,11 @@
+añadir meodo hexadecimal, de binariio a str y a hexadecimal, crear metodo exrtraccion binario en Celda
+lista de listas como el grid
+
+luego camino corto, como coño hacemos esto?
+
+crear archivo .txt
+imprime hexa
+salida, entrada
+
+
+añadir en mapa original self.camino = None
