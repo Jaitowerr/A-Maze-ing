@@ -1,2 +1,0 @@
-Realiza un pip -r entorno.txt
-para las dependencias y luego solo ejecuta el programa, claro antes levanta el entorno virtual
