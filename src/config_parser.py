@@ -52,7 +52,7 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
         except ValueError:
             errores.append('SEED debe ser un entero')
 
-    ALGORITMOS_VALIDOS = ('recursive_backtracker',)
+    ALGORITMOS_VALIDOS = ('recursive_backtracker','generate_maze')
     DISPLAYS_VALIDOS = ('mlx', 'ascii')
 
     # algorithm = dict_config.get('ALGORITHM', None)
@@ -114,7 +114,8 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
         center_42=center_42,
         seed=seed,
         algorithm=algorithm,
-        display=display
+        display=display,
+        cell_size=40
     )
 
 

@@ -2,7 +2,34 @@
 
 import sys
 import os
+from src.Direcccion import Direccion
+from src.Celda import Celda
+from src.GameControl import GameControl
+from src.Player import Player
+from mlx import Mlx
 
+def draw_tile(m, mlx, win, img,x,y):
+    m.mlx_put_image_to_window(mlx,win,img,x,y)
+
+#Solucion en base al hexadecimal y binario
+def get_tile_key(cell: Celda):
+    n = int(cell.walls[Direccion.NORTE])
+    s = int(cell.walls[Direccion.SUR])
+    e = int(cell.walls[Direccion.ESTE])
+    o = int(cell.walls[Direccion.OESTE])
+    return f"{n}{s}{e}{o}"
+
+def load_tiles(m, mlx):
+    tiles = {}
+    for i in range(16):
+        key = format(i, "04b")
+        path = f"./img/{key}.png"
+        img,_,_ = m.mlx_png_file_to_image(mlx, path)
+        tiles[key] = img
+    
+    tiles["entry"],_,_ = m.mlx_png_file_to_image(mlx, "./img/pacman1.png")
+    tiles["exit"],_,_ = m.mlx_png_file_to_image(mlx, "./img/pj.png")
+    return tiles
 
 def programa(parse_config):
     print('Ejecutando programa...')
@@ -35,6 +62,25 @@ def init_sys() -> None:
     else:
         return
 
+def close_window(param):
+    param.mlx_loop_exit(param.mlx_ptr)
+
+def key_hook(key, control:GameControl):
+    print(key)
+    if key == 65307:
+        control._m.mlx_loop_exit(control._m.mlx_ptr)
+    if 65361 <= key <= 65364:
+        control.move_player(key)
+    if key == 112:
+        pass #gamecontrol pause false
+    if key == 109:
+        control.crear_ascii()
+    elif key == 49:
+        control.crear_mapa2()
+    elif key == 50:
+        pass
+        #control.crear_mapa1()
+
 
 if __name__ == '__main__':
     init_sys()
@@ -42,18 +88,21 @@ if __name__ == '__main__':
     cfg = parse_config(sys.argv[1]) # objeto, listo para enviar a cualquier sitio
     # programa(cfg)
     # cfg.print_grid()
-    print('-' * 55)
-    print('-' * 55)
+    
     from src.maze_generator import MazeGenerator
     gen = MazeGenerator(cfg)
-    # gen.print_grid()
-    print('-' * 55)
-    print('-' * 55)
-    print('-' * 55)
-    print('-' * 55)
-    gen.algoritmo()
-    gen.print_grid()
-    # print('-' * 55)
-    # print('-' * 55)
-    # cfg.print_grid()
+    m = Mlx()
+    m.mlx_ptr = m.mlx_init()
+    win = m.mlx_new_window(
+        m.mlx_ptr,
+        cfg.width*40,
+        cfg.height*40,
+        "42 maze"
+    )
+    player = Player((0,0))
+    tiles = load_tiles(m, m.mlx_ptr)
+    control = GameControl(m,win,gen,player, tiles)
+    m.mlx_key_hook(win,key_hook,control)
     
+    m.mlx_hook(win,17,0,close_window,m)
+    m.mlx_loop(m.mlx_ptr)

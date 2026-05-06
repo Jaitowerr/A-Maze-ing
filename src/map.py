@@ -19,6 +19,7 @@ class MazeConfig:
     algorithm: Optional[str] = None
     display: Optional[str] = None
     grid: list[list[int]] = None
+    cell_size: int = None
 
     def __post_init__(self):
         self.iniciando_grid()
@@ -174,5 +175,3 @@ class MazeConfig:
             for e in errores:
                 print("  - ", e)
             sys.exit(1)
-
-
