@@ -14,8 +14,11 @@ run:
 	@echo " ██╔══██║╚════╝██║╚██╔╝██║██╔══██║ ███╔╝  ██╔══╝  ╚════╝██║██║╚██╗██║██║   ██║"
 	@echo " ██║  ██║      ██║ ╚═╝ ██║██║  ██║███████╗███████╗      ██║██║ ╚████║╚██████╔╝"
 	@echo " ╚═╝  ╚═╝      ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝      ╚═╝╚═╝  ╚═══╝ ╚═════╝ "
+	@echo "\n"
 	@echo "\033[1;32m"
 	@poetry run python3 a_maze_ing.py config.txt
+	@echo "\033[1;31m""\nFIN DE PROGRAMA - HASTA PRONTO!"
+# 	@$(MAKE) clean
 
 debug:
 	@clear
@@ -33,8 +36,5 @@ lint:
 lint-strict:
 	@poetry run flake8 .
 	@poetry run mypy . --strict
-
-test:
-	@poetry run pytest
 
 .PHONY: install run debug clean lint lint-strict test

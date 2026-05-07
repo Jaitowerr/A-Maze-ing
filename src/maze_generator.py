@@ -80,6 +80,7 @@ class MazeGenerator:
             """
             return self.grid_binario[y][x]
 
+
     def print_maze(self):
         """
         Representación visual simple en consola.
@@ -87,43 +88,119 @@ class MazeGenerator:
         +---+ = paredes horizontales
         |   | = paredes verticales
         """
+        simples = ['─', '│', '┌', '┐', '└', '┘', '├', '┤', '┬', '┴', '┼']
+        dobles  = ['═', '║', '╔', '╗', '╚', '╝', '╠', '╣', '╦', '╩', '╬']
+        relleno = ['█', '▓', '▒', '░', '▄', '▀', '▌', '▐']
 
-        top_line = "+"
+        texto = {
+            "negro": "\033[30m", "rojo": "\033[31m", "verde": "\033[32m",
+            "amarillo": "\033[33m", "azul": "\033[34m", "magenta": "\033[35m",
+            "cian": "\033[36m", "blanco": "\033[37m", "gris": "\033[90m",
+            "rojo_b": "\033[91m", "verde_b": "\033[92m", "amarillo_b": "\033[93m",
+            "azul_b": "\033[94m", "magenta_b": "\033[95m", "cian_b": "\033[96m",
+            "blanco_b": "\033[97m"
+        }
+
+        fondo = {
+            "negro": "\033[40m", "rojo": "\033[41m", "verde": "\033[42m",
+            "amarillo": "\033[43m", "azul": "\033[44m", "magenta": "\033[45m",
+            "cian": "\033[46m", "blanco": "\033[47m", "gris": "\033[100m",
+            "rojo_b": "\033[101m", "verde_b": "\033[102m", "amarillo_b": "\033[103m",
+            "azul_b": "\033[104m", "magenta_b": "\033[105m", "cian_b": "\033[106m",
+            "blanco_b": "\033[107m"
+        }
+
+        estilo = {
+            "reset": "\033[0m", "negrita": "\033[1m",
+            "tenue": "\033[2m", "subrayado": "\033[4m", "invertido": "\033[7m"
+        }
+
+        PARED_H  = "───"   # pared horizontal
+        PARED_V  = "│"     # pared vertical
+        ESQUINA  = "│"     # esquinas/intersecciones
+        PASILLO  = "   "   # espacio abierto
+        ENTRADA  = " E "
+        SALIDA   = " S "
+        P42      = "███"
+
+        top_line = ESQUINA
         for _ in range(len(self.grid_binario[0])):
-            top_line += "---+"
+            top_line += PARED_H + ESQUINA
         print(top_line)
 
         for y in range(len(self.grid_binario)):
-            line_walls = "|"
-            line_floor = "+"
+            line_walls = PARED_V
+            line_floor = ESQUINA
             for x in range(len(self.grid_binario[0])):
-                #print(f"celda: {x} {y}")
                 cell = self.get_cell(x, y)
 
-                
-                if self.cfg.entry_x_y ==[x, y]:
-                    content = " E "
+                if self.cfg.entry_x_y == [x, y]:
+                    content = ENTRADA
                 elif self.cfg.exit_x_y == [x, y]:
-                    content = " S "
+                    content = SALIDA
                 elif cell.casilla_42:
-                    content = "42 "
+                    content = P42
                 else:
-                    content = "   "
-
+                    content = PASILLO
 
                 if cell.walls[Direccion.ESTE]:
-                    line_walls += content + "|"
+                    line_walls += content + PARED_V
                 else:
                     line_walls += content + " "
 
-      
                 if cell.walls[Direccion.SUR]:
-                    line_floor += "---+"
+                    line_floor += PARED_H + ESQUINA
                 else:
-                    line_floor += "   +"
+                    line_floor += PASILLO + ESQUINA
 
             print(line_walls)
             print(line_floor)
+
+
+    # def print_maze(self):
+    #     """
+    #     Representación visual simple en consola.
+
+    #     +---+ = paredes horizontales
+    #     |   | = paredes verticales
+    #     """
+
+    #     top_line = "+"
+    #     for _ in range(len(self.grid_binario[0])):
+    #         top_line += "---+"
+    #     print(top_line)
+
+    #     for y in range(len(self.grid_binario)):
+    #         line_walls = "|"
+    #         line_floor = "+"
+    #         for x in range(len(self.grid_binario[0])):
+    #             #print(f"celda: {x} {y}")
+    #             cell = self.get_cell(x, y)
+
+                
+    #             if self.cfg.entry_x_y ==[x, y]:
+    #                 content = " E "
+    #             elif self.cfg.exit_x_y == [x, y]:
+    #                 content = " S "
+    #             elif cell.casilla_42:
+    #                 content = "42 "
+    #             else:
+    #                 content = "   "
+
+
+    #             if cell.walls[Direccion.ESTE]:
+    #                 line_walls += content + "|"
+    #             else:
+    #                 line_walls += content + " "
+
+      
+    #             if cell.walls[Direccion.SUR]:
+    #                 line_floor += "---+"
+    #             else:
+    #                 line_floor += "   +"
+
+    #         print(line_walls)
+    #         print(line_floor)
     
     def get_tile_key(self, cell: Celda):
         n = int(cell.walls[Direccion.NORTE])

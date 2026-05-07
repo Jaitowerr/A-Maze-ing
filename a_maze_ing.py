@@ -91,20 +91,42 @@ if __name__ == '__main__':
     from src.maze_generator import MazeGenerator
     gen = MazeGenerator(cfg)
     gen.docu_finish()
-    m = Mlx()
-    m.mlx_ptr = m.mlx_init()
-    win = m.mlx_new_window(
-        m.mlx_ptr,
-        len(gen.grid_binario[0])*40,
-        len(gen.grid_binario)*40,
-        "42 maze"
-    )
-    tiles = load_tiles(m, m.mlx_ptr)
-    player = Player((cfg.entry_x,cfg.entry_y), tiles["player"])
-    control = GameControl(m,win,gen,player, tiles)
-    control.crear_mapa2()
-    player.render(m,win)
-    m.mlx_key_hook(win,key_hook,control)
+
+    if cfg.display == 'ascii':
+        gen.print_maze()
+        from src.ascii_menu import ascii_menu
+        ascii_menu(gen)
+    else:
+        m = Mlx()
+        m.mlx_ptr = m.mlx_init()
+        win = m.mlx_new_window(
+            m.mlx_ptr,
+            len(gen.grid_binario[0]) * 40,
+            len(gen.grid_binario) * 40,
+            "42 maze"
+        )
+        tiles = load_tiles(m, m.mlx_ptr)
+        player = Player((cfg.entry_x, cfg.entry_y), tiles["player"])
+        control = GameControl(m, win, gen, player, tiles)
+        control.crear_mapa2()
+        player.render(m, win)
+        m.mlx_key_hook(win, key_hook, control)
+        m.mlx_hook(win, 17, 0, close_window, m)
+        m.mlx_loop(m.mlx_ptr)
+    # m = Mlx()
+    # m.mlx_ptr = m.mlx_init()
+    # win = m.mlx_new_window(
+    #     m.mlx_ptr,
+    #     len(gen.grid_binario[0])*40,
+    #     len(gen.grid_binario)*40,
+    #     "42 maze"
+    # )
+    # tiles = load_tiles(m, m.mlx_ptr)
+    # player = Player((cfg.entry_x,cfg.entry_y), tiles["player"])
+    # control = GameControl(m,win,gen,player, tiles)
+    # control.crear_mapa2()
+    # player.render(m,win)
+    # m.mlx_key_hook(win,key_hook,control)
     
-    m.mlx_hook(win,17,0,close_window,m)
-    m.mlx_loop(m.mlx_ptr)
+    # m.mlx_hook(win,17,0,close_window,m)
+    # m.mlx_loop(m.mlx_ptr)
