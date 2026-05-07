@@ -20,7 +20,7 @@ class MazeGenerator:
         self.shortest_path()
 
     def algoritmo(self) -> None:
-        random.seed(self.cfg.seed)
+        # random.seed(self.cfg.seed)
         if self.cfg.algorithm == 'recursive_backtracker':
             from .algorithm import recursive_backtracker
             recursive_backtracker.run(self)
@@ -282,5 +282,5 @@ class MazeGenerator:
 
         direcciones.reverse()
         self.camino = ''.join(direcciones)
-        print(self.camino)
+        # print(self.camino)
         return self.camino

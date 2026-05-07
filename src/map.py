@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
+import random
 
 
 @dataclass
@@ -28,6 +29,7 @@ class MazeConfig:
         self.proteger_42()
         self.añadir_marco()
         self.verificar_entrada_salida()
+        random.seed(self.seed)
 
     def iniciando_grid(self) -> None:
         self.grid = [[1 for _ in range(self.width)]
