@@ -85,13 +85,12 @@ def key_hook(key, control:GameControl):
 if __name__ == '__main__':
     init_sys()
     from src.config_parser import parse_config
-    cfg = parse_config(sys.argv[1]) # objeto, listo para enviar a cualquier sitio
-    # programa(cfg)
-    # cfg.print_grid()
+    cfg = parse_config(sys.argv[1])
     from src.maze_generator import MazeGenerator
     gen = MazeGenerator(cfg)
     gen.docu_finish()
-
+    print('Existen distintos algoritmos de ejecución, puedes ejegir entre : recursive_backtracker y kruskal')
+    print(f'El algoritmo utilizdo es: {gen.cfg.algorithm}\n')
     if cfg.display == 'ascii':
         gen.print_maze()
         from src.ascii_menu import ascii_menu

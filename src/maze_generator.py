@@ -2,6 +2,7 @@ from src.map import MazeConfig
 from .Celda import Celda
 from .Direcccion import Direccion
 import random
+from collections import deque
 
 
 class MazeGenerator:
@@ -16,15 +17,19 @@ class MazeGenerator:
         self.algoritmo()
         self.binario()
         self.hexadecimal()
+        self.shortest_path()
 
     def algoritmo(self) -> None:
         random.seed(self.cfg.seed)
         if self.cfg.algorithm == 'recursive_backtracker':
             from .algorithm import recursive_backtracker
-            ok = recursive_backtracker.run(self)
-        if self.cfg.algorithm == 'kruskal':
+            recursive_backtracker.run(self)
+        elif self.cfg.algorithm == 'kruskal':
             from .algorithm import kruskal
-            ok = kruskal.run(self)
+            kruskal.run(self)
+        # elif self.cfg.algorithm == 'dfs':
+        #     from .algorithm import dfs
+        #     dfs.run(self)
 
 
     def binario(self):
@@ -71,8 +76,8 @@ class MazeGenerator:
                 f.write(fila + '\n')
             f.write('\n')
             f.write(f'{self.cfg.entry_x_y[0]},{self.cfg.entry_x_y[1]}\n')
-            f.write(f'{self.cfg.exit_x_y[0]},{self.cfg.exit_x_y[1]}')
-            # f.write(self.camino)
+            f.write(f'{self.cfg.exit_x_y[0]},{self.cfg.exit_x_y[1]}\n')
+            f.write(f'{self.camino}')
 
     def get_cell(self, x, y) -> Celda:
             """
@@ -225,5 +230,57 @@ class MazeGenerator:
                 elif self.cfg.exit_x_y == [x,y]:
                     img = tiles["exit"]
                     m.mlx_put_image_to_window(mlx,win,img,px+14,py+14)
-                
+    
+    def shortest_path(self):
+        # sy = self.cfg.entry_y // 2
+        # sx = self.cfg.entry_x // 2
+        # ey = self.cfg.exit_y // 2
+        # ex = self.cfg.exit_x // 2
+        sx, sy = self.cfg.entry_x_y
+        ex, ey = self.cfg.exit_x_y
 
+        H = len(self.grid_binario)
+        W = len(self.grid_binario[0])
+
+        queue = deque([(sy, sx)])
+        visited = {(sy, sx)}
+        parent = {}  # (ny, nx) → ((y, x), 'dirección')
+
+        while queue:
+            y, x = queue.popleft()
+
+            if (y, x) == (ey, ex):
+                break
+
+            celda = self.grid_binario[y][x]
+
+            movimientos = [
+                (celda.walls[Direccion.NORTE] == 0, y - 1, x, 'N'),
+                (celda.walls[Direccion.SUR] == 0,   y + 1, x, 'S'),
+                (celda.walls[Direccion.ESTE] == 0,  y, x + 1, 'E'),
+                (celda.walls[Direccion.OESTE] == 0, y, x - 1, 'O'),
+            ]
+
+            for hay_paso, ny, nx, direccion in movimientos:
+                if hay_paso and 0 <= ny < H and 0 <= nx < W:
+                    if (ny, nx) not in visited:
+                        visited.add((ny, nx))
+                        parent[(ny, nx)] = ((y, x), direccion)
+                        queue.append((ny, nx))
+
+        # ✅ reconstruir string de direcciones
+        if (ey, ex) not in parent:
+            self.camino = None
+            return None
+
+        direcciones = []
+        cur = (ey, ex)
+
+        while cur != (sy, sx):
+            cur, d = parent[cur]
+            direcciones.append(d)
+
+        direcciones.reverse()
+        self.camino = ''.join(direcciones)
+        print(self.camino)
+        return self.camino
