@@ -89,6 +89,17 @@ class MazeGenerator:
             """
             return self.grid_binario[y][x]
 
+    def redraw_tile(self, m, mlx, win, tiles, x, y):
+        cell = self.get_cell(x,y)
+        key = self.get_tile_key(cell)
+        img = tiles[key]
+        px = x*40
+        py = y*40
+        m.mlx_put_image_to_window(mlx,win,img,px,py)
+        if self.cfg.entry_x_y == [x,y]:
+            m.mlx_put_image_to_window(mlx,win,tiles["entry"],px+14,py+14)
+        elif self.cfg.exit_x_y == [x,y]:
+            m.mlx_put_image_to_window(mlx,win,tiles["exit"],px+14,py+14)
 
     def print_maze(self):
         """
@@ -288,45 +299,5 @@ class MazeGenerator:
         self.camino = ''.join(direcciones)
         # print(self.camino)
         return self.camino
-    #prueba temporal mejorando graficos
-    def build_maze_image(self, m, mlx,win, tiles):
-        TILE = 40
-
-        width = len(self.grid_binario[0]) * TILE
-        height = len(self.grid_binario) * TILE
-
-        
-        self.maze_img = m.mlx_new_image(mlx, width, height)
-        # Dibujamos TEMPORALMENTE en ventana
-        for y in range(len(self.grid_binario)):
-            for x in range(len(self.grid_binario[0])):
-
-                cell = self.get_cell(x, y)
-
-                px = x * TILE
-                py = y * TILE
-
-                key = self.get_tile_key(cell)
-                img = tiles[key]
-
-                m.mlx_put_image_to_window(mlx, win, img, px, py)
-
-                if self.cfg.entry_x_y == [x, y]:
-                    m.mlx_put_image_to_window(
-                        mlx,
-                        win,
-                        tiles["entry"],
-                        px + 14,
-                        py + 14
-                    )
-
-                elif self.cfg.exit_x_y == [x, y]:
-                    m.mlx_put_image_to_window(
-                        mlx,
-                        win,
-                        tiles["exit"],
-                        px + 14,
-                        py + 14
-                    )
-        # self.static_render_done = True
+    
 

@@ -54,5 +54,5 @@ def run(map: MazeGenerator):
     map.grid[sy][sx] = 4
     map.grid[ey][ex] = 5
     if map.cfg.perfect == False:
-        add_loops(map, 0.05)
+        add_loops(map, 0.15)
             
