@@ -61,9 +61,10 @@ def close_window(param):
     param.mlx_loop_exit(param.mlx_ptr)
 
 def key_hook(key, control:GameControl):
+    botones = [119,115,97,100]
     if key == 65307:
         control._m.mlx_loop_exit(control._m.mlx_ptr)
-    if 65361 <= key <= 65364:
+    if 65361 <= key <= 65364 or key in botones:
         control.move_player(key)
     if key == 112:
         pass #gamecontrol pause false
@@ -73,7 +74,7 @@ def key_hook(key, control:GameControl):
         control.crear_mapa2()
     elif key == 50:
         control.crear_mapa1()
-        #control.crear_mapa1()
+
 
 
 if __name__ == '__main__':
@@ -95,31 +96,20 @@ if __name__ == '__main__':
         win = m.mlx_new_window(
             m.mlx_ptr,
             len(gen.grid_binario[0]) * 40,
-            len(gen.grid_binario) * 40,
+            (len(gen.grid_binario) * 40)+80,
             "42 maze"
         )
         tiles = load_tiles(m, m.mlx_ptr)
         player = Player((cfg.entry_x, cfg.entry_y), tiles["player"])
         control = GameControl(m, win, gen, player, tiles)
         control.crear_mapa2()
-        player.render(m, win)
+		#ESTO ES SOLO PRUEBA, LUEGO AÑADIRE UN BUEN FUNCIONAMIENTO SOLO ES PARA LA SEPARACION DEL MAPA
+        img,_,_ = m.mlx_png_file_to_image(m.mlx_ptr, "./img/play.png")
+        m.mlx_put_image_to_window(m.mlx_ptr, win, img, 30,(len(gen.grid_binario) * 40)+20)
+        m.mlx_put_image_to_window(m.mlx_ptr, win, img, 60+140,(len(gen.grid_binario) * 40)+20)
+        m.mlx_put_image_to_window(m.mlx_ptr, win, img, 90+140+140,(len(gen.grid_binario) * 40)+20)
+        m.mlx_put_image_to_window(m.mlx_ptr, win, img, 120+140+140+140,(len(gen.grid_binario) * 40)+20)
         m.mlx_key_hook(win, key_hook, control)
         m.mlx_hook(win, 17, 0, close_window, m)
         m.mlx_loop(m.mlx_ptr)
-    # m = Mlx()
-    # m.mlx_ptr = m.mlx_init()
-    # win = m.mlx_new_window(
-    #     m.mlx_ptr,
-    #     len(gen.grid_binario[0])*40,
-    #     len(gen.grid_binario)*40,
-    #     "42 maze"
-    # )
-    # tiles = load_tiles(m, m.mlx_ptr)
-    # player = Player((cfg.entry_x,cfg.entry_y), tiles["player"])
-    # control = GameControl(m,win,gen,player, tiles)
-    # control.crear_mapa2()
-    # player.render(m,win)
-    # m.mlx_key_hook(win,key_hook,control)
-    
-    # m.mlx_hook(win,17,0,close_window,m)
-    # m.mlx_loop(m.mlx_ptr)
+
