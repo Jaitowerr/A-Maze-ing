@@ -160,13 +160,13 @@ class MazeConfig:
         celda_salida = self.grid[self.exit_y][self.exit_x]
 
  
-        if celda_entrada == 2:
+        if celda_entrada == 42:
             errores.append(
                 f"Error: La entrada {self.entry_x_y} cae sobre una celda "
                 f"bloqueada (marco o patrón 42). Elige otra posición."
             )
  
-        if celda_salida == 2:
+        if celda_salida == 42:
             errores.append(
                 f"Error: La salida {self.exit_x_y} cae sobre una celda "
                 f"bloqueada (marco o patrón 42). Elige otra posición."

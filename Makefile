@@ -17,7 +17,8 @@ run:
 	@echo "\n"
 	@echo "\033[1;32m"
 	@poetry run python3 a_maze_ing.py config.txt
-	@echo "\033[1;31m""\nFIN DE PROGRAMA - HASTA PRONTO!"
+	@echo "\033[31m"
+	@echo "\nFIN DE PROGRAMA - HASTA PRONTO!"
 # 	@$(MAKE) clean
 
 debug:

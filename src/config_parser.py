@@ -58,6 +58,17 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
     # algorithm = dict_config.get('ALGORITHM', None)
     algorithm = dict_config.get('ALGORITHM', 'recursive_backtracker')
     display = dict_config.get('DISPLAY', 'mlx')
+    
+    if display == 'mlx':
+        if width > 90:
+            errores.append('WIDTH debe ser menor de 90')
+        if height > 45:
+            errores.append('HEIGHT debe ser menor de 45')
+    if display == 'ascii':
+        if width > 60:
+            errores.append('WIDTH debe ser menor de 90')
+        # if height > 600:
+        #     errores.append('HEIGHT debe ser menor de 45')
 
     if algorithm is not None and algorithm not in ALGORITMOS_VALIDOS:
         errores.append(

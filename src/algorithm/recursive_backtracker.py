@@ -70,7 +70,7 @@ def run(gen):
                 if c1 in visited and c2 in visited:
                     paredes.append((y, x))
 
-        n_romper = max(1, len(paredes) // 5)
+        n_romper = max(1, len(paredes) // 3)
         for y, x in random.sample(paredes, min(n_romper, len(paredes))):
             grid[y][x] = 0
 
