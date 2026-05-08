@@ -2,6 +2,20 @@ from ..maze_generator import MazeGenerator
 import random
 from ..dsu import DSU
 
+def add_loops(map:MazeGenerator, probability=0.10):
+    heigh = len(map.grid)
+    width = len(map.grid[0])
+    for y in range(1, heigh - 1):
+        for x in range(1, width - 1):
+            if map.grid[y][x] != 3:
+                continue
+            if random.random() > probability:
+                continue
+            if map.grid[y][x] == 2:
+                continue
+            map.grid[y][x] = 0
+    
+
 def run(map: MazeGenerator):
     sy, sx = map.cfg.entry_y, map.cfg.entry_x
     ey, ex = map.cfg.exit_y, map.cfg.exit_x
@@ -39,4 +53,6 @@ def run(map: MazeGenerator):
                 map.grid[y2][x2] = 0
     map.grid[sy][sx] = 4
     map.grid[ey][ex] = 5
+    if map.cfg.perfect == False:
+        add_loops(map, 0.05)
             

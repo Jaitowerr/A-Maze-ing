@@ -31,6 +31,10 @@ class MazeGenerator:
         #     from .algorithm import dfs
         #     dfs.run(self)
 
+    def reset(self):
+        self.grid = [row.copy() for row in self.cfg.grid]
+        self.grid[self.cfg.entry_y][self.cfg.entry_x] = 4
+        self.grid[self.cfg.exit_y][self.cfg.exit_x] = 5
 
     def binario(self):
         self.grid_binario = []
@@ -212,7 +216,7 @@ class MazeGenerator:
         s = int(cell.walls[Direccion.SUR])
         e = int(cell.walls[Direccion.ESTE])
         o = int(cell.walls[Direccion.OESTE])
-        return f"{n}{s}{e}{o}"
+        return f"{o}{s}{e}{n}"
 
     def draw_maze(self,m,mlx,win,tiles):
         for y in range(len(self.grid_binario)):
@@ -284,3 +288,45 @@ class MazeGenerator:
         self.camino = ''.join(direcciones)
         # print(self.camino)
         return self.camino
+    #prueba temporal mejorando graficos
+    def build_maze_image(self, m, mlx,win, tiles):
+        TILE = 40
+
+        width = len(self.grid_binario[0]) * TILE
+        height = len(self.grid_binario) * TILE
+
+        
+        self.maze_img = m.mlx_new_image(mlx, width, height)
+        # Dibujamos TEMPORALMENTE en ventana
+        for y in range(len(self.grid_binario)):
+            for x in range(len(self.grid_binario[0])):
+
+                cell = self.get_cell(x, y)
+
+                px = x * TILE
+                py = y * TILE
+
+                key = self.get_tile_key(cell)
+                img = tiles[key]
+
+                m.mlx_put_image_to_window(mlx, win, img, px, py)
+
+                if self.cfg.entry_x_y == [x, y]:
+                    m.mlx_put_image_to_window(
+                        mlx,
+                        win,
+                        tiles["entry"],
+                        px + 14,
+                        py + 14
+                    )
+
+                elif self.cfg.exit_x_y == [x, y]:
+                    m.mlx_put_image_to_window(
+                        mlx,
+                        win,
+                        tiles["exit"],
+                        px + 14,
+                        py + 14
+                    )
+        # self.static_render_done = True
+

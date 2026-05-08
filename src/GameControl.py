@@ -37,14 +37,18 @@ class GameControl():
             self._player.render(self._m, self._win)
 
     def crear_mapa2(self):
-        self._map.algoritmo()
         self._m.mlx_clear_window(self._m.mlx_ptr, self._win)
+        self._map.reset()
+        self._map.algoritmo()
+        self._map.binario()
         self._map.draw_maze(self._m,self._m.mlx_ptr, self._win, self._tiles)
     
     def crear_mapa1(self):
-        self._map.cfg.algorithm = "kruskal"
-        self._map.algoritmo()
         self._m.mlx_clear_window(self._m.mlx_ptr, self._win)
+        self._map.cfg.algorithm = "kruskal"
+        self._map.reset()
+        self._map.algoritmo()
+        self._map.binario()
         self._map.draw_maze(self._m,self._m.mlx_ptr, self._win, self._tiles)
     
     def crear_ascii(self):

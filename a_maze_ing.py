@@ -11,19 +11,13 @@ from mlx import Mlx
 def draw_tile(m, mlx, win, img,x,y):
     m.mlx_put_image_to_window(mlx,win,img,x,y)
 
-#Solucion en base al hexadecimal y binario
-def get_tile_key(cell: Celda):
-    n = int(cell.walls[Direccion.NORTE])
-    s = int(cell.walls[Direccion.SUR])
-    e = int(cell.walls[Direccion.ESTE])
-    o = int(cell.walls[Direccion.OESTE])
-    return f"{o}{e}{s}{n}"
+
 
 def load_tiles(m, mlx):
     tiles = {}
     for i in range(16):
         key = format(i, "04b")
-        path = f"./img/{key}.png"
+        path = f"./img2/{key}.png"
         img,_,_ = m.mlx_png_file_to_image(mlx, path)
         tiles[key] = img
     
