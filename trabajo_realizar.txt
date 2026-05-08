@@ -1,11 +1,21 @@
-añadir meodo hexadecimal, de binariio a str y a hexadecimal, crear metodo exrtraccion binario en Celda
-lista de listas como el grid
+TERMINAR ascii
 
-luego camino corto, como coño hacemos esto?
+PARSEO SI CAE EN NUMERO 42 NO PUEDE FUNCIONAR, DEVOLVER ERROR
+PARSEO ANCHO MAXIMO Y ALTO APRA ASCII Y MLX PARA ANCHO DE PPANTALLA, SERÁ VARIABLE SEGÚN PANTALLA, MODULO SYS PROBAR
+COLORES ASCII
+PINTAR SOLUCION CAMBIANDO FONDO DE COLOR O CON PUNTOS
 
-crear archivo .txt
-imprime hexa
-salida, entrada
+----------------------------
+MLX
+CENTRAR PLAYER
+MARIO BROSS Y LUIGUI
+TUBERÍAS
+META ES LA PRINCESA
+SALIDA TUUBERIA GRANDE
 
+DIMENSION de mapa:
+si ancho es menor o igual a 20 y altura lo msimo, redimensionar a 80x80 px
 
-añadir en mapa original self.camino = None
+CAMBIAR COLORES DE MANERA ALEATORIO
+
+CREAR MENÚ
