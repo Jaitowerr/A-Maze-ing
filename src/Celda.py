@@ -37,4 +37,3 @@ class Celda():
         if valor == 1101: return 'D'
         if valor == 1110: return 'E'
         if valor == 1111: return 'F'
-        

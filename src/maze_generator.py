@@ -96,22 +96,18 @@ class MazeGenerator:
         py = y*self.cfg.pixel
         m.mlx_put_image_to_window(mlx, win, img, px, py)
         if self.cfg.entry_x_y == [x, y]:
-            m.mlx_put_image_to_window(mlx, win, tiles["entry"], px-(len(self.grid_binario[0])//2)+ self.cfg.pixel//4, py-(len(self.grid_binario)//2)+ self.cfg.pixel//4)
+            m.mlx_put_image_to_window(mlx, win, tiles["entry"], px-(len(
+                self.grid_binario[0])//2) + self.cfg.pixel//4, py-(len(self.grid_binario)//2) + self.cfg.pixel//4)
         elif self.cfg.exit_x_y == [x, y]:
-            m.mlx_put_image_to_window(mlx, win, tiles["exit"], px-(len(self.grid_binario[0])//2)+ self.cfg.pixel//4, py-(len(self.grid_binario)//2)+ self.cfg.pixel//4)
+            m.mlx_put_image_to_window(mlx, win, tiles["exit"], px-(len(
+                self.grid_binario[0])//2) + self.cfg.pixel//4, py-(len(self.grid_binario)//2) + self.cfg.pixel//4)
 
     def print_maze(self, color_grid='\033[34m', color_bg_way='\033[93m', iconos=None):
 
         if iconos is None:
             iconos = {
-                'PARED_H': '<o>',
-                'PARED_V': '|',
-                'ESQUINA': 'i',
+                'PARED_H': '---', 'PARED_V': '|', 'ESQUINA': '+'
             }
-
-        simples = ['─', '│', '┌', '┐', '└', '┘', '├', '┤', '┬', '┴', '┼']
-        dobles = ['═', '║', '╔', '╗', '╚', '╝', '╠', '╣', '╦', '╩', '╬']
-        relleno = ['█', '▓', '▒', '░', '▄', '▀', '▌', '▐']
 
         PARED_H = iconos['PARED_H'] + color_grid  # pared horizontal
         PARED_V = iconos['PARED_V'] + color_grid     # pared vertical
@@ -206,10 +202,15 @@ class MazeGenerator:
                     content = P42
                 elif (cx, cy) in camino_celdas:
                     d = camino_celdas[(cx, cy)]
-                    if d in ('E', 'O'):
-                        content = color_bg_way + ' * ' + color_grid
-                    else:  # N, S
-                        content = color_bg_way + ' * ' + color_grid
+                    if d == 'N':
+                        content = color_bg_way + ' ^ ' + color_grid
+                    elif d == 'S':
+                        content = color_bg_way + ' v ' + color_grid
+                    elif d == 'E':
+                        content = color_bg_way + ' » ' + color_grid
+                    elif d == 'O':
+                        content = color_bg_way + ' « ' + color_grid
+
                 else:
                     content = PASILLO
 
@@ -289,10 +290,12 @@ class MazeGenerator:
                 m.mlx_put_image_to_window(mlx, win, img, px, py)
                 if self.cfg.entry_x_y == [x, y]:
                     img = tiles["entry"]
-                    m.mlx_put_image_to_window(mlx, win, img, px-(len(self.grid_binario[0])//2)+ self.cfg.pixel//4, py-(len(self.grid_binario)//2)+ self.cfg.pixel//4)
+                    m.mlx_put_image_to_window(mlx, win, img, px-(len(self.grid_binario[0])//2) + self.cfg.pixel//4, py-(
+                        len(self.grid_binario)//2) + self.cfg.pixel//4)
                 elif self.cfg.exit_x_y == [x, y]:
                     img = tiles["exit"]
-                    m.mlx_put_image_to_window(mlx, win, img, px-(len(self.grid_binario[0])//2)+ self.cfg.pixel//4, py-(len(self.grid_binario)//2)+ self.cfg.pixel//4)
+                    m.mlx_put_image_to_window(mlx, win, img, px-(len(self.grid_binario[0])//2) + self.cfg.pixel//4, py-(
+                        len(self.grid_binario)//2) + self.cfg.pixel//4)
 
     def shortest_path(self):
         # sy = self.cfg.entry_y // 2
