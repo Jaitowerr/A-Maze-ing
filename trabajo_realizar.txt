@@ -14,7 +14,7 @@ META ES LA PRINCESA
 SALIDA TUUBERIA GRANDE
 
 DIMENSION de mapa:
-si ancho es menor o igual a 20 y altura lo msimo, redimensionar a 80x80 px
+si ancho es menor o igual a 20 y altura lo msimo, redimensionar a 60x60 px
 
 CAMBIAR COLORES DE MANERA ALEATORIO
 
