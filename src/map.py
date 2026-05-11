@@ -21,6 +21,8 @@ class MazeConfig:
     display: Optional[str] = None
     grid: list[list[int]] = None
     cell_size: int = None
+    pixel: int = None
+    ruta: str = None
 
     def __post_init__(self):
         self.iniciando_grid()

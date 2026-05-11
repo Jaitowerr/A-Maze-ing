@@ -92,13 +92,13 @@ class MazeGenerator:
         cell = self.get_cell(x, y)
         key = self.get_tile_key(cell)
         img = tiles[key]
-        px = x*40
-        py = y*40
+        px = x*self.cfg.pixel
+        py = y*self.cfg.pixel
         m.mlx_put_image_to_window(mlx, win, img, px, py)
         if self.cfg.entry_x_y == [x, y]:
-            m.mlx_put_image_to_window(mlx, win, tiles["entry"], px+14, py+14)
+            m.mlx_put_image_to_window(mlx, win, tiles["entry"], px-(len(self.grid_binario[0])//2)+ self.cfg.pixel//4, py-(len(self.grid_binario)//2)+ self.cfg.pixel//4)
         elif self.cfg.exit_x_y == [x, y]:
-            m.mlx_put_image_to_window(mlx, win, tiles["exit"], px+14, py+14)
+            m.mlx_put_image_to_window(mlx, win, tiles["exit"], px-(len(self.grid_binario[0])//2)+ self.cfg.pixel//4, py-(len(self.grid_binario)//2)+ self.cfg.pixel//4)
 
     def print_maze(self, color_grid='\033[34m', color_bg_way='\033[93m', iconos=None):
 
@@ -281,18 +281,18 @@ class MazeGenerator:
         for y in range(len(self.grid_binario)):
             for x in range(len(self.grid_binario[0])):
                 cell = self.get_cell(x, y)
-                px = x * 40
-                py = y * 40
+                px = x * self.cfg.pixel
+                py = y * self.cfg.pixel
 
                 key = self.get_tile_key(cell)
                 img = tiles[key]
                 m.mlx_put_image_to_window(mlx, win, img, px, py)
                 if self.cfg.entry_x_y == [x, y]:
                     img = tiles["entry"]
-                    m.mlx_put_image_to_window(mlx, win, img, px+14, py+14)
+                    m.mlx_put_image_to_window(mlx, win, img, px-(len(self.grid_binario[0])//2)+ self.cfg.pixel//4, py-(len(self.grid_binario)//2)+ self.cfg.pixel//4)
                 elif self.cfg.exit_x_y == [x, y]:
                     img = tiles["exit"]
-                    m.mlx_put_image_to_window(mlx, win, img, px+14, py+14)
+                    m.mlx_put_image_to_window(mlx, win, img, px-(len(self.grid_binario[0])//2)+ self.cfg.pixel//4, py-(len(self.grid_binario)//2)+ self.cfg.pixel//4)
 
     def shortest_path(self):
         # sy = self.cfg.entry_y // 2

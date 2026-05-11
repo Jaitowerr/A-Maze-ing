@@ -126,6 +126,8 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
         seed=seed,
         algorithm=algorithm,
         display=display,
+        pixel=60,
+        ruta ="img2/mario",
     )
 
 
