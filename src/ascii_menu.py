@@ -1,20 +1,21 @@
 import os
 import random
+from .maze_generator import MazeGenerator
 
 
-def print_menu(gen : object):
-    
+def print_menu(gen: "MazeGenerator") -> None:
     print('\033[97m')
     print("\n--- MENU ---")
     print("  1. Generate a new maze")
     print("  2. Show/Hide solution path")
     print("  3. Change wall color (random)")
     if gen.cfg.center_42:
-            print("  4. Change '42' background color (random)")
-            print("  5. Change wall style")
+        print("  4. Change '42' background color (random)")
+        print("  5. Change wall style")
     else:
         print("  4. Change wall style")
     print("  q. Quit")
+
 
 def color_random() -> str:
     texto = {
@@ -22,7 +23,6 @@ def color_random() -> str:
         "amarillo":   "\033[33m",
         "gris":       "\033[90m",
         "rojo_b":     "\033[91m",
-        "amarillo_b": "\033[93m",
         "rosa":       "\033[95m",
         "turquesa":   "\033[96m",
         "blanco_b":   "\033[97m"
@@ -30,7 +30,7 @@ def color_random() -> str:
     return random.choice(list(texto.values()))
 
 
-def _get_style_chars(style):
+def _get_style_chars(style: int) -> dict[str, str]:
     if style == 1:      # simples
         return {'PARED_H': '───', 'PARED_V': '│', 'ESQUINA': '┼'}
     elif style == 2:    # dobles
@@ -51,21 +51,18 @@ def _get_style_chars(style):
         return {'PARED_H': '***', 'PARED_V': '*', 'ESQUINA': '*'}
     elif style == 10:   # ondas
         return {'PARED_H': '~~~', 'PARED_V': '!', 'ESQUINA': '~'}
+    return {'PARED_H': '---', 'PARED_V': '|', 'ESQUINA': '+'}
 
 
-def ascii_menu(gen):
-
+def ascii_menu(gen: MazeGenerator) -> bool:
     print_menu(gen)
     color_grid = '\033[34m'
     color_bg_way = '\033[33m'
     true_false = False
     iconos = {
-        'PARED_H': '<o>',
-        'PARED_V': '|',
-        'ESQUINA': 'i',
+        'PARED_H': '---', 'PARED_V': '|', 'ESQUINA': '+'
     }
     number = 3
-    
 
     while True:
 
@@ -83,7 +80,8 @@ def ascii_menu(gen):
             print('\n\nHAS PULSADO EL 1, GENERANDO NUEVO MAPA\n')
             from .maze_generator import MazeGenerator
             gen = MazeGenerator(gen.cfg)
-            color_grid, color_bg_way = gen.print_maze(color_grid, color_bg_way, iconos)
+            color_grid, color_bg_way = gen.print_maze(
+                color_grid, color_bg_way, iconos)
             gen.docu_finish()
             print_menu(gen)
             true_false = False
@@ -134,11 +132,11 @@ def ascii_menu(gen):
                 else:
                     color_grid, color_bg_way = gen.print_maze(
                         color_grid, color_bg_way, iconos)
-            else: 
+            else:
                 print('\n\nHAS PULSADO EL 4, CAMBIANDO ESTILO MAPA\n')
                 number2 = random.randint(1, 10)
                 while number == number2:
-                    number2 = random.randint(1,10)
+                    number2 = random.randint(1, 10)
                 number = number2
                 iconos = _get_style_chars(number)
                 if true_false:
@@ -154,7 +152,7 @@ def ascii_menu(gen):
             print('\n\nHAS PULSADO EL 5, CAMBIANDO ESTILO MAPA\n')
             number2 = random.randint(1, 10)
             while number == number2:
-                number2 = random.randint(1,10)
+                number2 = random.randint(1, 10)
             number = number2
             iconos = _get_style_chars(number)
             if true_false:

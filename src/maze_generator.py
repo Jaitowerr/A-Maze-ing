@@ -1,42 +1,41 @@
 from src.map import MazeConfig
 from .Celda import Celda
 from .Direcccion import Direccion
-import random
 from collections import deque
+from typing import Optional, Any
 
 
 class MazeGenerator:
     def __init__(self, cfg: MazeConfig) -> None:
         self.cfg = cfg
+        assert cfg.grid is not None
         self.grid = [row.copy() for row in cfg.grid]
         self.grid[self.cfg.entry_y][self.cfg.entry_x] = 4
         self.grid[self.cfg.exit_y][self.cfg.exit_x] = 5
-        self.grid_binario = None
-        self.grid_hexadecimal = None
-        self.camino = None
+        self.grid_binario: Optional[list[list[Celda]]] = None
+        self.grid_hexadecimal: Optional[list[str]] = None
+        self.camino: Optional[str] = None
         self.algoritmo()
         self.binario()
         self.hexadecimal()
         self.shortest_path()
 
     def algoritmo(self) -> None:
-        # random.seed(self.cfg.seed)
+
         if self.cfg.algorithm == 'recursive_backtracker':
             from .algorithm import recursive_backtracker
             recursive_backtracker.run(self)
         elif self.cfg.algorithm == 'kruskal':
             from .algorithm import kruskal
             kruskal.run(self)
-        # elif self.cfg.algorithm == 'dfs':
-        #     from .algorithm import dfs
-        #     dfs.run(self)
 
-    def reset(self):
+    def reset(self) -> None:
+        assert self.cfg.grid is not None
         self.grid = [row.copy() for row in self.cfg.grid]
         self.grid[self.cfg.entry_y][self.cfg.entry_x] = 4
         self.grid[self.cfg.exit_y][self.cfg.exit_x] = 5
 
-    def binario(self):
+    def binario(self) -> None:
         self.grid_binario = []
         row = 1
         while (row < len(self.grid) - 1):
@@ -55,7 +54,8 @@ class MazeGenerator:
             self.grid_binario.append(fila_celdas)
             row += 2
 
-    def hexadecimal(self):
+    def hexadecimal(self) -> None:
+        assert self.grid_binario is not None
         self.grid_hexadecimal = []
         for row in self.grid_binario:
             fila_hexa = ''
@@ -63,17 +63,19 @@ class MazeGenerator:
                 fila_hexa += celda.bin_to_hexa()
             self.grid_hexadecimal.append(fila_hexa)
 
-    # def print_grid(self) -> None:
-    #     for row in self.grid:
-    #         for idx, val in enumerate(row):
-    #             end = ", " if idx < len(row) - 1 else ""
-    #             print(val, end=end)
-    #         print()
+    def print_grid(self) -> None:
+        for row in self.grid:
+            for idx, val in enumerate(row):
+                end = ", " if idx < len(row) - 1 else ""
+                print(val, end=end)
+            print()
 
-    def in_bounds(self, x, y):
-        return 0 <= x < self.width and 0 <= y < self.height
+    def in_bounds(self, x: int, y: int) -> bool:
+        return 0 <= x < self.cfg.width and 0 <= y < self.cfg.height
 
-    def docu_finish(self):
+    def docu_finish(self) -> None:
+        assert self.grid_hexadecimal is not None
+        assert self.camino is not None
         with open(self.cfg.output_file, 'w') as f:
             for fila in self.grid_hexadecimal:
                 f.write(fila + '\n')
@@ -82,13 +84,22 @@ class MazeGenerator:
             f.write(f'{self.cfg.exit_x_y[0]},{self.cfg.exit_x_y[1]}\n')
             f.write(f'{self.camino}')
 
-    def get_cell(self, x, y) -> Celda:
+    def get_cell(self, x: int, y: int) -> Celda:
         """
         Devuelve la celda en la posición (x, y)
         """
+        assert self.grid_binario is not None
         return self.grid_binario[y][x]
 
-    def redraw_tile(self, m, mlx, win, tiles, x, y):
+    def redraw_tile(self,
+                    m: Any,
+                    mlx: int,
+                    win: int,
+                    tiles: dict[str, int],
+                    x: int,
+                    y: int) -> None:
+        assert self.cfg.pixel is not None
+        assert self.grid_binario is not None
         cell = self.get_cell(x, y)
         key = self.get_tile_key(cell)
         img = tiles[key]
@@ -96,24 +107,34 @@ class MazeGenerator:
         py = y*self.cfg.pixel
         m.mlx_put_image_to_window(mlx, win, img, px, py)
         if self.cfg.entry_x_y == [x, y]:
-            m.mlx_put_image_to_window(mlx, win, tiles["entry"], px-(len(
-                self.grid_binario[0])//2) + self.cfg.pixel//4, py-(len(self.grid_binario)//2) + self.cfg.pixel//4)
-        elif self.cfg.exit_x_y == [x, y]:
-            m.mlx_put_image_to_window(mlx, win, tiles["exit"], px-(len(
-                self.grid_binario[0])//2) + self.cfg.pixel//4, py-(len(self.grid_binario)//2) + self.cfg.pixel//4)
 
-    def print_maze(self, color_grid='\033[34m', color_bg_way='\033[93m', iconos=None):
+            m.mlx_put_image_to_window(
+                mlx, win, tiles["entry"],
+                px-(len(self.grid_binario[0])//2) + self.cfg.pixel//4,
+                py-(len(self.grid_binario)//2) + self.cfg.pixel//4)
+
+        elif self.cfg.exit_x_y == [x, y]:
+            m.mlx_put_image_to_window(
+                mlx, win, tiles["exit"],
+                px-(len(self.grid_binario[0])//2) + self.cfg.pixel//4,
+                py-(len(self.grid_binario)//2) + self.cfg.pixel//4)
+
+    def print_maze(self,
+                   color_grid: str = '\033[34m',
+                   color_bg_way: str = '\033[93m',
+                   iconos: Optional[dict[str, str]] = None) -> tuple[str, str]:
 
         if iconos is None:
             iconos = {
                 'PARED_H': '---', 'PARED_V': '|', 'ESQUINA': '+'
             }
+        assert self.grid_binario is not None
 
-        PARED_H = iconos['PARED_H'] + color_grid  # pared horizontal
-        PARED_V = iconos['PARED_V'] + color_grid     # pared vertical
+        PARED_H = iconos['PARED_H'] + color_grid
+        PARED_V = iconos['PARED_V'] + color_grid
         ESQUINA = color_grid + iconos['ESQUINA'] + \
-            color_grid     # esquinas/intersecciones
-        PASILLO = "   " + color_grid   # espacio abierto
+            color_grid
+        PASILLO = "   " + color_grid
         ENTRADA = color_bg_way + " E " + color_grid
         SALIDA = color_bg_way + " S " + color_grid
         P42 = color_bg_way + "███" + color_grid
@@ -152,15 +173,20 @@ class MazeGenerator:
             print(line_floor)
         return color_grid, color_bg_way
 
-    def print_maze_path(self, color_grid='\033[32m', color_bg_way='\033[35m', iconos=None):
+    def print_maze_path(
+        self,
+        color_grid: str = '\033[32m',
+        color_bg_way: str = '\033[35m',
+        iconos: Optional[dict[str, str]] = None
+    ) -> tuple[str, str]:
 
         if iconos is None:
             iconos = {
-                'PARED_H': '<o>',
-                'PARED_V': '|',
-                'ESQUINA': 'i',
+                'PARED_H': '---', 'PARED_V': '|', 'ESQUINA': '+'
             }
-        camino_celdas = {}  # (x, y) -> dirección de llegada
+        assert self.camino is not None
+        assert self.grid_binario is not None
+        camino_celdas = {}
         sx, sy = self.cfg.entry_x_y
         x, y = sx, sy
         for d in self.camino:
@@ -173,7 +199,7 @@ class MazeGenerator:
                 x += 1
             elif d == 'O':
                 x -= 1
-        camino_celdas[(x, y)] = 'X'  # salida
+        camino_celdas[(x, y)] = 'X'
 
         PARED_H = iconos['PARED_H'] + color_grid
         PARED_V = iconos['PARED_V'] + color_grid
@@ -229,56 +255,20 @@ class MazeGenerator:
 
         return color_grid, color_bg_way
 
-    # def print_maze(self):
-    #     """
-    #     Representación visual simple en consola.
-
-    #     +---+ = paredes horizontales
-    #     |   | = paredes verticales
-    #     """
-
-    #     top_line = "+"
-    #     for _ in range(len(self.grid_binario[0])):
-    #         top_line += "---+"
-    #     print(top_line)
-
-    #     for y in range(len(self.grid_binario)):
-    #         line_walls = "|"
-    #         line_floor = "+"
-    #         for x in range(len(self.grid_binario[0])):
-    #             #print(f"celda: {x} {y}")
-    #             cell = self.get_cell(x, y)
-
-    #             if self.cfg.entry_x_y ==[x, y]:
-    #                 content = " E "
-    #             elif self.cfg.exit_x_y == [x, y]:
-    #                 content = " S "
-    #             elif cell.casilla_42:
-    #                 content = "42 "
-    #             else:
-    #                 content = "   "
-
-    #             if cell.walls[Direccion.ESTE]:
-    #                 line_walls += content + "|"
-    #             else:
-    #                 line_walls += content + " "
-
-    #             if cell.walls[Direccion.SUR]:
-    #                 line_floor += "---+"
-    #             else:
-    #                 line_floor += "   +"
-
-    #         print(line_walls)
-    #         print(line_floor)
-
-    def get_tile_key(self, cell: Celda):
+    def get_tile_key(self, cell: Celda) -> str:
         n = int(cell.walls[Direccion.NORTE])
         s = int(cell.walls[Direccion.SUR])
         e = int(cell.walls[Direccion.ESTE])
         o = int(cell.walls[Direccion.OESTE])
         return f"{o}{s}{e}{n}"
 
-    def draw_maze(self, m, mlx, win, tiles):
+    def draw_maze(self,
+                  m: Any,
+                  mlx: int,
+                  win: int,
+                  tiles: dict[str, int]) -> None:
+        assert self.grid_binario is not None
+        assert self.cfg.pixel is not None
         for y in range(len(self.grid_binario)):
             for x in range(len(self.grid_binario[0])):
                 cell = self.get_cell(x, y)
@@ -288,20 +278,22 @@ class MazeGenerator:
                 key = self.get_tile_key(cell)
                 img = tiles[key]
                 m.mlx_put_image_to_window(mlx, win, img, px, py)
+                # DESPUÉS
                 if self.cfg.entry_x_y == [x, y]:
                     img = tiles["entry"]
-                    m.mlx_put_image_to_window(mlx, win, img, px-(len(self.grid_binario[0])//2) + self.cfg.pixel//4, py-(
-                        len(self.grid_binario)//2) + self.cfg.pixel//4)
+                    m.mlx_put_image_to_window(
+                        mlx, win, img,
+                        px-(len(self.grid_binario[0])//2) + self.cfg.pixel//4,
+                        py-(len(self.grid_binario)//2) + self.cfg.pixel//4)
                 elif self.cfg.exit_x_y == [x, y]:
                     img = tiles["exit"]
-                    m.mlx_put_image_to_window(mlx, win, img, px-(len(self.grid_binario[0])//2) + self.cfg.pixel//4, py-(
-                        len(self.grid_binario)//2) + self.cfg.pixel//4)
+                    m.mlx_put_image_to_window(
+                        mlx, win, img,
+                        px-(len(self.grid_binario[0])//2) + self.cfg.pixel//4,
+                        py-(len(self.grid_binario)//2) + self.cfg.pixel//4)
 
-    def shortest_path(self):
-        # sy = self.cfg.entry_y // 2
-        # sx = self.cfg.entry_x // 2
-        # ey = self.cfg.exit_y // 2
-        # ex = self.cfg.exit_x // 2
+    def shortest_path(self) -> Optional[str]:
+        assert self.grid_binario is not None
         sx, sy = self.cfg.entry_x_y
         ex, ey = self.cfg.exit_x_y
 
@@ -310,7 +302,7 @@ class MazeGenerator:
 
         queue = deque([(sy, sx)])
         visited = {(sy, sx)}
-        parent = {}  # (ny, nx) → ((y, x), 'dirección')
+        parent = {}
 
         while queue:
             y, x = queue.popleft()
@@ -334,7 +326,6 @@ class MazeGenerator:
                         parent[(ny, nx)] = ((y, x), direccion)
                         queue.append((ny, nx))
 
-        # ✅ reconstruir string de direcciones
         if (ey, ex) not in parent:
             self.camino = None
             return None
@@ -348,5 +339,4 @@ class MazeGenerator:
 
         direcciones.reverse()
         self.camino = ''.join(direcciones)
-        # print(self.camino)
         return self.camino

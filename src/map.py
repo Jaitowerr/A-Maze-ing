@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Any
 import random
 
 
@@ -7,24 +7,24 @@ import random
 class MazeConfig:
     width: int
     height: int
-    entry_x_y: list[int, int]
+    entry_x_y: list[int]
     entry_x: int
     entry_y: int
-    exit_x_y: list[int, int]
+    exit_x_y: list[int]
     exit_x: int
     exit_y: int
     output_file: str
     perfect: bool
     center_42: bool
-    seed: Optional[int] = None
+    seed: Optional[Any] = None
     algorithm: Optional[str] = None
     display: Optional[str] = None
-    grid: list[list[int]] = None
-    cell_size: int = None
-    pixel: int = None
-    ruta: str = None
+    grid: Optional[list[list[int]]] = None
+    cell_size: Optional[int] = None
+    pixel: Optional[int] = None
+    ruta: Optional[str] = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.iniciando_grid()
         self.construir_42()
         self.añadir_cuadricula()
@@ -38,6 +38,7 @@ class MazeConfig:
                      for _ in range(self.height)]
 
     def print_grid(self) -> None:
+        assert self.grid is not None
         for row in self.grid:
             for idx, val in enumerate(row):
                 end = ", " if idx < len(row) - 1 else ""
@@ -47,8 +48,7 @@ class MazeConfig:
     def construir_42(self) -> None:
         if not self.center_42:
             return
-        # if (self.width % 2 != 0) or (self.height % 2 != 0):
-        #     self.center_42 = False
+        assert self.grid is not None
         patron = [
             "X    XXXX",
             "X       X",
@@ -68,12 +68,11 @@ class MazeConfig:
                     if self.grid[top + r][left + c] == 1:
                         self.grid[top + r][left + c] = 42
 
-    def añadir_marco(self):
+    def añadir_marco(self) -> None:
+        assert self.grid is not None
         top = [2] * self.width
         bot = [2] * self.width
-        # for _ in range(self.width):
-        #     top.append(2)
-        #     bot.append(2)
+
         self.grid.insert(0, top)
         self.grid.append(bot)
 
@@ -89,9 +88,8 @@ class MazeConfig:
         self.height += 2
 
     def añadir_cuadricula(self) -> None:
-
+        assert self.grid is not None
         old_h = len(self.grid)
-        # old_w = max(len(r) for r in self.grid) if old_h > 0 else 0
 
         new_grid = []
 
@@ -103,14 +101,12 @@ class MazeConfig:
                     new_row.append(3)
             new_grid.append(new_row)
 
-            # if i != old_h - 1:
-            #     sep_row = [3] * len(new_row)
-            #     new_grid.append(sep_row)
-
             if i != old_h - 1:
-                # fila separadora: 3, espacio, 3, espacio, ...
+
+                # sep_row = [3 if k %
+                #            2 == 0 else ' ' for k in range(len(new_row))]
                 sep_row = [3 if k %
-                           2 == 0 else ' ' for k in range(len(new_row))]
+                           2 == 0 else 2 for k in range(len(new_row))]
                 new_grid.append(sep_row)
 
         self.grid = new_grid
@@ -123,14 +119,13 @@ class MazeConfig:
         self.entry_y = self.entry_y * 2
         self.exit_y = self.exit_y * 2
 
-
     def proteger_42(self) -> None:
         if not self.center_42:
             return
-
+        assert self.grid is not None
         rows = len(self.grid)
 
-        to_set = set()  # conjunto de (r,c) a cambiar a 2
+        to_set = set()
 
         for r in range(rows):
             row = self.grid[r]
@@ -143,37 +138,37 @@ class MazeConfig:
                     if c + 1 < len(row) and self.grid[r][c + 1] == 3:
                         to_set.add((r, c + 1))
                     # arriba
-                    if r - 1 >= 0 and c < len(self.grid[r - 1]) and self.grid[r - 1][c] == 3:
+                    if (r - 1 >= 0 and c < len(self.grid[r - 1])
+                            and self.grid[r - 1][c] == 3):
                         to_set.add((r - 1, c))
                     # abajo
-                    if r + 1 < rows and c < len(self.grid[r + 1]) and self.grid[r + 1][c] == 3:
+                    if (r + 1 < rows and c < len(self.grid[r + 1])
+                            and self.grid[r + 1][c] == 3):
                         to_set.add((r + 1, c))
 
-        # aplicar cambios
         for (r, c) in to_set:
             self.grid[r][c] = 2
 
-
-    def verificar_entrada_salida(self):
+    def verificar_entrada_salida(self) -> None:
         import sys
+        assert self.grid is not None
         errores = []
- 
+
         celda_entrada = self.grid[self.entry_y][self.entry_x]
         celda_salida = self.grid[self.exit_y][self.exit_x]
 
- 
         if celda_entrada == 42:
             errores.append(
                 f"Error: La entrada {self.entry_x_y} cae sobre una celda "
                 f"bloqueada (marco o patrón 42). Elige otra posición."
             )
- 
+
         if celda_salida == 42:
             errores.append(
                 f"Error: La salida {self.exit_x_y} cae sobre una celda "
                 f"bloqueada (marco o patrón 42). Elige otra posición."
             )
- 
+
         if errores:
             print("\nErrores en la configuración del laberinto:")
             for e in errores:

@@ -3,7 +3,7 @@ from .map import MazeConfig
 import sys
 
 
-def _validar_y_construir(dict_config: dict) -> MazeConfig:
+def _validar_y_construir(dict_config: dict[str, str]) -> MazeConfig:
     errores = []
     required = ['WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT']
     for r in required:
@@ -37,9 +37,6 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
         errores.append('EXIT debe tener formato x,y de enteros. '
                        'Ejemplo: 19,14')
 
-    if 'ENTRY' == 'EXIT' in dict_config:
-        errores.append('ENTRY y EXIT no pueden ser iguales')
-
     if dict_config['PERFECT'] not in ('True', 'False'):
         errores.append('PERFECT debe ser True o False')
     else:
@@ -52,13 +49,13 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
         except ValueError:
             errores.append('SEED debe ser un entero')
 
-    ALGORITMOS_VALIDOS = ('recursive_backtracker','kruskal')
+    ALGORITMOS_VALIDOS = ('recursive_backtracker', 'kruskal')
     DISPLAYS_VALIDOS = ('mlx', 'ascii')
 
     # algorithm = dict_config.get('ALGORITHM', None)
     algorithm = dict_config.get('ALGORITHM', 'recursive_backtracker')
     display = dict_config.get('DISPLAY', 'mlx')
-    
+
     if display == 'mlx':
         if width > 90:
             errores.append('WIDTH debe ser menor de 90')
@@ -127,7 +124,7 @@ def _validar_y_construir(dict_config: dict) -> MazeConfig:
         algorithm=algorithm,
         display=display,
         pixel=60,
-        ruta ="img2/mario",
+        ruta="img2/mario",
     )
 
 
@@ -166,8 +163,6 @@ def parse_config(config_txt: str) -> MazeConfig:
                 continue
 
             dict_config[key] = value
-
-    # print(dict_config)     #prueba print diccionario entrada configurado
 
     if errores:
         print('\nErrores en config.txt:')

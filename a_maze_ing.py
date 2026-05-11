@@ -2,32 +2,34 @@
 
 import sys
 import os
-from src.Direcccion import Direccion
-from src.Celda import Celda
 from src.GameControl import GameControl
 from src.Player import Player
 from src.map import MazeConfig
-from mlx import Mlx
-
-def draw_tile(m, mlx, win, img,x,y):
-    m.mlx_put_image_to_window(mlx,win,img,x,y)
+from mlx import Mlx  # type: ignore[import-untyped]
 
 
+def draw_tile(m: Mlx, mlx: int, win: int, img: int, x: int, y: int) -> None:
+    m.mlx_put_image_to_window(mlx, win, img, x, y)
 
-def load_tiles(m, mlx, cfg:MazeConfig):
+
+def load_tiles(m: Mlx, mlx: int, cfg: MazeConfig) -> dict[str, int]:
     tiles = {}
     for i in range(16):
         key = format(i, "04b")
         path = f"./{cfg.ruta}/{key}.png"
-        img,_,_ = m.mlx_png_file_to_image(mlx, path)
+        img, _, _ = m.mlx_png_file_to_image(mlx, path)
         tiles[key] = img
-    
-    tiles["entry"],_,_ = m.mlx_png_file_to_image(mlx, f"./{cfg.ruta}/entrada.png")
-    tiles["exit"],_,_ = m.mlx_png_file_to_image(mlx, f"./{cfg.ruta}/salida.png")
-    tiles["player"],_,_ = m.mlx_png_file_to_image(mlx, f"./{cfg.ruta}/mario1.png")
+
+    tiles["entry"], _, _ = m.mlx_png_file_to_image(
+        mlx, f"./{cfg.ruta}/entrada.png")
+    tiles["exit"], _, _ = m.mlx_png_file_to_image(
+        mlx, f"./{cfg.ruta}/salida.png")
+    tiles["player"], _, _ = m.mlx_png_file_to_image(
+        mlx, f"./{cfg.ruta}/mario1.png")
     return tiles
 
-def programa(parse_config):
+
+def programa(parse_config: str) -> None:
     print('Ejecutando programa...')
     print(parse_config)
 
@@ -58,18 +60,20 @@ def init_sys() -> None:
     else:
         return
 
-def close_window(param):
+
+def close_window(param: Mlx) -> None:
     param.mlx_loop_exit(param.mlx_ptr)
 
-def key_hook(key, control:GameControl):
+
+def key_hook(key: int, control: GameControl) -> None:
     print(key)
-    botones = [119,115,97,100]
+    botones = [119, 115, 97, 100]
     if key == 65307:
         control._m.mlx_loop_exit(control._m.mlx_ptr)
     if 65361 <= key <= 65364 or key in botones:
         control.move_player(key)
     if key == 112:
-        pass #gamecontrol pause false
+        pass  # gamecontrol pause false
     if key == 109:
         control.crear_ascii()
     elif key == 49:
@@ -82,7 +86,6 @@ def key_hook(key, control:GameControl):
         control.pintar_ruta()
 
 
-
 if __name__ == '__main__':
     init_sys()
     from src.config_parser import parse_config
@@ -90,13 +93,17 @@ if __name__ == '__main__':
     from src.maze_generator import MazeGenerator
     gen = MazeGenerator(cfg)
     gen.docu_finish()
-    print('Existen distintos algoritmos de ejecución, puedes ejegir entre : recursive_backtracker y kruskal')
+    print(
+        'Existen distintos algoritmos de ejecución,'
+        ' puedes ejegir entre : recursive_backtracker y kruskal')
     print(f'El algoritmo utilizdo es: {gen.cfg.algorithm}\n')
     if cfg.display == 'ascii':
         gen.print_maze()
         from src.ascii_menu import ascii_menu
         ascii_menu(gen)
     else:
+        assert gen.grid_binario is not None
+        assert cfg.pixel is not None
         m = Mlx()
         m.mlx_ptr = m.mlx_init()
         win = m.mlx_new_window(
@@ -109,13 +116,27 @@ if __name__ == '__main__':
         player = Player((cfg.entry_x, cfg.entry_y), tiles["player"])
         control = GameControl(m, win, gen, player, tiles)
         control.crear_mapa2()
-		#ESTO ES SOLO PRUEBA, LUEGO AÑADIRE UN BUEN FUNCIONAMIENTO SOLO ES PARA LA SEPARACION DEL MAPA
-        img,_,_ = m.mlx_png_file_to_image(m.mlx_ptr, "./img/play.png")
-        m.mlx_put_image_to_window(m.mlx_ptr, win, img, 30,(len(gen.grid_binario) * cfg.pixel)+20)
-        m.mlx_put_image_to_window(m.mlx_ptr, win, img, 60+140,(len(gen.grid_binario) * cfg.pixel)+20)
-        m.mlx_put_image_to_window(m.mlx_ptr, win, img, 90+140+140,(len(gen.grid_binario) * cfg.pixel)+20)
-        m.mlx_put_image_to_window(m.mlx_ptr, win, img, 120+140+140+140,(len(gen.grid_binario) * cfg.pixel)+20)
+        # ESTO ES SOLO PRUEBA, LUEGO AÑADIRE UN BUEN FUNCIONAMIENTO
+        # SOLO ES PARA LA SEPARACION DEL MAPA
+
+        img, _, _ = m.mlx_png_file_to_image(
+            m.mlx_ptr, "./img/play.png")
+
+        m.mlx_put_image_to_window(
+            m.mlx_ptr, win, img, 30,
+            (len(gen.grid_binario) * cfg.pixel)+20)
+
+        m.mlx_put_image_to_window(
+            m.mlx_ptr, win, img, 60+140,
+            (len(gen.grid_binario) * cfg.pixel)+20)
+
+        m.mlx_put_image_to_window(
+            m.mlx_ptr, win, img, 90+140+140,
+            (len(gen.grid_binario) * cfg.pixel)+20)
+
+        m.mlx_put_image_to_window(
+            m.mlx_ptr, win, img, 120+140+140+140,
+            (len(gen.grid_binario) * cfg.pixel)+20)
         m.mlx_key_hook(win, key_hook, control)
         m.mlx_hook(win, 17, 0, close_window, m)
         m.mlx_loop(m.mlx_ptr)
-
