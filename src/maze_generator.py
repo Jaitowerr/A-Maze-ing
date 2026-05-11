@@ -135,8 +135,8 @@ class MazeGenerator:
         ESQUINA = color_grid + iconos['ESQUINA'] + \
             color_grid
         PASILLO = "   " + color_grid
-        ENTRADA = color_bg_way + " E " + color_grid
-        SALIDA = color_bg_way + " S " + color_grid
+        ENTRADA = color_bg_way + "STR" + color_grid
+        SALIDA = color_bg_way + "FIN" + color_grid
         P42 = color_bg_way + "███" + color_grid
 
         top_line = ESQUINA
@@ -205,8 +205,8 @@ class MazeGenerator:
         PARED_V = iconos['PARED_V'] + color_grid
         ESQUINA = color_grid + iconos['ESQUINA'] + color_grid
         PASILLO = "   " + color_grid
-        ENTRADA = color_bg_way + " E " + color_grid
-        SALIDA = color_bg_way + " S " + color_grid
+        ENTRADA = color_bg_way + "STR" + color_grid
+        SALIDA = color_bg_way + "FIN" + color_grid
         P42 = color_bg_way + "███" + color_grid
 
         top_line = ESQUINA

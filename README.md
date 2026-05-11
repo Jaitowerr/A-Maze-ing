@@ -20,10 +20,11 @@ El laberinto siempre incluye el patrón **"42"** dibujado con celdas cerradas en
 ---
 
 ## Instructions
+> ⚠️ Solo compatible con **macOS** y **Linux**
 
 ### Installation & Run
 
-El proyecto usa **Poetry** para gestionar las dependencias. El propio `make run` se encarga de instalar todo antes de arrancar:
+El proyecto usa **Poetry** para gestionar las dependencias. El propio `make run` se encarga de instalar todo automáticamente antes de arrancar:
 
 ```bash
 make run
@@ -38,14 +39,34 @@ python3 a_maze_ing.py config.txt
 ### Other Makefile rules
 
 ```bash
-make install   # Solo instala dependencias
-make debug     # Arranca con pdb (debugger de Python)
-make clean     # Limpia __pycache__, .mypy_cache, dist, build
-make lint      # flake8 + mypy con flags estándar del subject
-make lint-strict  # flake8 + mypy --strict
+make run	        #Instala dependencias y lanza el programa
+make install	    #Solo instala dependencias (Poetry + MiniLibX)
+make debug	        #Lanza el programa con pdb (debugger de Python)
+make clean	        #Elimina __pycache__, .mypy_cache, dist, build
+make lint	        #Ejecuta flake8 + mypy con los flags estándar del subject
+make lint-strict	#Ejecuta flake8 + mypy --strict (más restrictivo)
 ```
 
+### Debug mode
+Explicación make debud:
+
+Para lanzar el programa con el debugger de Python (`pdb`):
+
+```bash
+make debug
+```
 ---
+
+```bash
+Comando	Acción
+n	        #Next — ejecuta la línea actual y pasa a la siguiente
+s	        #Step — entra dentro de una función
+c	        #Continue — ejecuta hasta el siguiente breakpoint (o hasta el final)
+l	        #List — muestra el código alrededor de donde estás
+p variable	#Print — imprime el valor de una variable, ej: p self._estado
+b 42	    #Breakpoint — pone un punto de parada en la línea 42
+q	        #Quit — sale del debugger
+```
 
 ## Configuration File
 

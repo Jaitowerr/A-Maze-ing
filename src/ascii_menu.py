@@ -164,4 +164,7 @@ def ascii_menu(gen: MazeGenerator) -> bool:
             print_menu(gen)
 
         else:
-            print("Opción no válida. Usa 1, 2, 3, 4 o q.")
+            if gen.cfg.center_42:
+                print("Opción no válida. Usa 1, 2, 3, 4, 5 o q.")
+            else:
+                print("Opción no válida. Usa 1, 2, 3, 4 o q.")
