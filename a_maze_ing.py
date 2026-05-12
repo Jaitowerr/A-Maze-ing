@@ -65,7 +65,6 @@ def close_window(param: Mlx) -> None:
 
 
 def key_hook(key: int, control: GameControl) -> None:
-    print(key)
     botones = [119, 115, 97, 100]
     if key == 65307:
         control._m.mlx_loop_exit(control._m.mlx_ptr)
@@ -79,9 +78,9 @@ def key_hook(key: int, control: GameControl) -> None:
         control.create_map_recursive()
     elif key == 50:
         control.create_map_kruskal()
-    elif key == 32:
-        control.change_color()
     elif key == 99:
+        control.change_color()
+    elif key == 32:
         control.paint_path()
 
 
@@ -120,21 +119,28 @@ if __name__ == '__main__':
 
         img, _, _ = m.mlx_png_file_to_image(
             m.mlx_ptr, "./img/play.png")
+        esc, _, _ = m.mlx_png_file_to_image(
+            m.mlx_ptr, "./img/esc.png")
+        space, _, _ = m.mlx_png_file_to_image(
+            m.mlx_ptr, "./img/space.png")
+        c, _, _ = m.mlx_png_file_to_image(
+            m.mlx_ptr, "./img/color.png")
 
+        width_pixel = len(gen.binary_grid[0]) * cfg.pixel //4
         m.mlx_put_image_to_window(
-            m.mlx_ptr, win, img, 30,
+            m.mlx_ptr, win, img, 0,
             (len(gen.binary_grid) * cfg.pixel)+20)
 
         m.mlx_put_image_to_window(
-            m.mlx_ptr, win, img, 60+140,
+            m.mlx_ptr, win, esc, width_pixel,
             (len(gen.binary_grid) * cfg.pixel)+20)
 
         m.mlx_put_image_to_window(
-            m.mlx_ptr, win, img, 90+140+140,
+            m.mlx_ptr, win, space, width_pixel*2,
             (len(gen.binary_grid) * cfg.pixel)+20)
 
         m.mlx_put_image_to_window(
-            m.mlx_ptr, win, img, 120+140+140+140,
+            m.mlx_ptr, win, c, width_pixel*3,
             (len(gen.binary_grid) * cfg.pixel)+20)
         m.mlx_key_hook(win, key_hook, control)
         m.mlx_hook(win, 17, 0, close_window, m)

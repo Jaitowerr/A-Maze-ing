@@ -3,18 +3,42 @@ import random
 from ..dsu import DSU
 
 
-def add_loops(map: MazeGenerator, probability: float = 0.10) -> None:
-    heigh = len(map.grid)
-    width = len(map.grid[0])
-    for y in range(1, heigh - 1):
-        for x in range(1, width - 1):
+def add_loops(map: MazeGenerator, probability=0.10):
+
+    H = len(map.grid)
+    W = len(map.grid[0])
+
+    for y in range(1, H - 1):
+        for x in range(1, W - 1):
+
             if map.grid[y][x] != 3:
                 continue
-            if random.random() > probability:
+
+            # SOLO paredes válidas
+
+            # pared vertical
+            if y % 2 == 1 and x % 2 == 0:
+                c1 = (y, x - 1)
+                c2 = (y, x + 1)
+
+            # pared horizontal
+            elif y % 2 == 0 and x % 2 == 1:
+                c1 = (y - 1, x)
+                c2 = (y + 1, x)
+
+            else:
+                # esto es un pilar -> NO romper
                 continue
-            if map.grid[y][x] == 2:
+
+            # ambas celdas deben ser pasillos
+            if map.grid[c1[0]][c1[1]] not in (0, 4, 5):
                 continue
-            map.grid[y][x] = 0
+
+            if map.grid[c2[0]][c2[1]] not in (0, 4, 5):
+                continue
+
+            if random.random() < probability:
+                map.grid[y][x] = 0
 
 
 def run(map: MazeGenerator) -> None:
@@ -55,4 +79,4 @@ def run(map: MazeGenerator) -> None:
     map.grid[sy][sx] = 4
     map.grid[ey][ex] = 5
     if not map.cfg.perfect:
-        add_loops(map, 0.15)
+        add_loops(map, 0.10)

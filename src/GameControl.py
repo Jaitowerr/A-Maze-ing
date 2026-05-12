@@ -2,6 +2,7 @@ from src.maze_generator import MazeGenerator
 from .Player import Player
 from .Direcccion import Direction
 from typing import Any
+import random
 
 
 class GameControl:
@@ -52,9 +53,13 @@ class GameControl:
         self._player._x = new_x
         self._player._y = new_y
         self._player.render(self._m, self._win, self._map)
+        if self._player._x == self._map.cfg.exit_x_y[0] and self._player._y == self._map.cfg.exit_x_y[1]:
+            self._m.mlx_loop_exit(self._m.mlx_ptr)
 
     def change_color(self) -> None:
-        self._map.cfg.rut = "img2/mario/colores"
+        color_list = ["img2/mario/colores1", "img2/mario/colores", "img2/mario/colores2"]
+        random.shuffle(color_list)
+        self._map.cfg.rut = color_list[0]
         from a_maze_ing import load_tiles
 
         self._tiles = load_tiles(self._m, self._mlx, self._map.cfg)
@@ -81,7 +86,7 @@ class GameControl:
                 start = self._map.get_cell(x, y)
                 key = self._map.get_tile_key(start)
                 tile, _, _ = self._m.mlx_png_file_to_image(
-                    self._mlx, f"../{self._map.cfg.rut}/camino/{key}.png"
+                    self._mlx, f"./{self._map.cfg.rut}/camino/{key}.png"
                 )
                 self._m.mlx_put_image_to_window(
                     self._mlx,
@@ -106,7 +111,7 @@ class GameControl:
                 if self._color[0]:
                     self._map.cfg.rut = self._color[1]
                 tile, _, _ = self._m.mlx_png_file_to_image(
-                    self._mlx, f"../{self._map.cfg.rut}/{key}.png"
+                    self._mlx, f"./{self._map.cfg.rut}/{key}.png"
                 )
                 self._m.mlx_put_image_to_window(
                     self._mlx, self._win, tile, x * self._map.cfg.pixel, y * self._map.cfg.pixel
