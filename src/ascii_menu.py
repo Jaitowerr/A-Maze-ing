@@ -102,12 +102,11 @@ def ascii_menu(gen: MazeGenerator) -> bool:
         elif option == '3':
             os.system('clear')
             print('\n\nHAS PULSADO EL 3, CAMBIANDO COLORES ALEATORIOS\n')
+            
             color_grid = color_random()
-
-            while True:
+            while color_grid == color_bg_way:
                 color_grid = color_random()
-                if color_grid != color_bg_way:
-                    break
+
             if true_false:
                 color_grid, color_bg_way = gen.print_maze_path(
                     color_grid, color_bg_way, iconos)
@@ -120,11 +119,10 @@ def ascii_menu(gen: MazeGenerator) -> bool:
             os.system('clear')
             if gen.cfg.center_42:
                 print('\n\nHAS PULSADO EL 4, CAMBIANDO COLOR FONDO DE 42\n')
+                
                 color_bg_way = color_random()
-                while True:
+                while color_bg_way == color_grid:
                     color_bg_way = color_random()
-                    if color_bg_way != color_grid:
-                        break
 
                 if true_false:
                     color_grid, color_bg_way = gen.print_maze_path(
