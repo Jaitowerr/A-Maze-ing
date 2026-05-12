@@ -135,7 +135,6 @@ def ascii_menu(gen: MazeGenerator) -> bool:
                 number2 = random.randint(1, 10)
                 while number == number2:
                     number2 = random.randint(1, 10)
-                    
                 number = number2
                 iconos = _get_style_chars(number)
                 if true_false:
