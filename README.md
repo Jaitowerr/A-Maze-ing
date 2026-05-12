@@ -198,18 +198,18 @@ cfg = MazeConfig(
     algorithm="recursive_backtracker",
     display="ascii",
     pixel=60,
-    ruta="img2/mario"
+    rut="img2/mario"
 )
 
 gen = MazeGenerator(cfg)
 
 # Acceder a la estructura del laberinto
-print(gen.grid_binario)      # list[list[Celda]]
-print(gen.grid_hexadecimal)  # list[str]
+print(gen.binary_grid)      # list[list[Celda]]
+print(gen.hex_grid)  # list[str]
 print(gen.camino)            # str con la solución (N, S, E, O)
 
 # Guardar el archivo de salida
-gen.docu_finish()
+gen.write_output()
 
 # Imprimir en terminal
 gen.print_maze()
@@ -255,8 +255,8 @@ poetry remove nombre_del_paquete → Para desinstalar dependencias
 
 Se ha utilizado IA (**Claude / GPT**) como apoyo en las siguientes tareas:
 
-- **Tipado estático**: Resolución de errores complejos de `mypy --strict`, especialmente con tipos opcionales (`Optional`, `Union-attr`) y la estrategia de `assert` para narrowing de tipos.
-- **Limpieza de código**: Corrección sistemática de errores `flake8` (E501, E231, E302, E712, W293...) sin tocar la lógica.
+- **Tipado estático**: Resolución de errors complejos de `mypy --strict`, especialmente con tipos opcionales (`Optional`, `Union-attr`) y la estrategia de `assert` para narrowing de tipos.
+- **Limpieza de código**: Corrección sistemática de errors `flake8` (E501, E231, E302, E712, W293...) sin tocar la lógica.
 - **Debugging**: Identificación de problemas de coherencia en la representación interna de la cuadrícula.
 - **Documentación**: Estructura y redacción del README siguiendo los requisitos del subject.
 

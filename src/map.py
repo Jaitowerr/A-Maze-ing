@@ -22,18 +22,18 @@ class MazeConfig:
     grid: Optional[list[list[int]]] = None
     cell_size: Optional[int] = None
     pixel: Optional[int] = None
-    ruta: Optional[str] = None
+    rut: Optional[str] = None
 
     def __post_init__(self) -> None:
-        self.iniciando_grid()
-        self.construir_42()
-        self.añadir_cuadricula()
-        self.proteger_42()
-        self.añadir_marco()
-        self.verificar_entrada_salida()
+        self.init_grid()
+        self.build_42()
+        self.add_grid_lines()
+        self.protect_42()
+        self.add_frame()
+        self.check_entry_exit()
         random.seed(self.seed)
 
-    def iniciando_grid(self) -> None:
+    def init_grid(self) -> None:
         self.grid = [[1 for _ in range(self.width)]
                      for _ in range(self.height)]
 
@@ -45,7 +45,7 @@ class MazeConfig:
                 print(val, end=end)
             print()
 
-    def construir_42(self) -> None:
+    def build_42(self) -> None:
         if not self.center_42:
             return
         assert self.grid is not None
@@ -68,7 +68,7 @@ class MazeConfig:
                     if self.grid[top + r][left + c] == 1:
                         self.grid[top + r][left + c] = 42
 
-    def añadir_marco(self) -> None:
+    def add_frame(self) -> None:
         assert self.grid is not None
         top = [2] * self.width
         bot = [2] * self.width
@@ -87,7 +87,7 @@ class MazeConfig:
         self.width += 2
         self.height += 2
 
-    def añadir_cuadricula(self) -> None:
+    def add_grid_lines(self) -> None:
         assert self.grid is not None
         old_h = len(self.grid)
 
@@ -102,9 +102,6 @@ class MazeConfig:
             new_grid.append(new_row)
 
             if i != old_h - 1:
-
-                # sep_row = [3 if k %
-                #            2 == 0 else ' ' for k in range(len(new_row))]
                 sep_row = [3 if k %
                            2 == 0 else 2 for k in range(len(new_row))]
                 new_grid.append(sep_row)
@@ -119,7 +116,7 @@ class MazeConfig:
         self.entry_y = self.entry_y * 2
         self.exit_y = self.exit_y * 2
 
-    def proteger_42(self) -> None:
+    def protect_42(self) -> None:
         if not self.center_42:
             return
         assert self.grid is not None
@@ -149,28 +146,30 @@ class MazeConfig:
         for (r, c) in to_set:
             self.grid[r][c] = 2
 
-    def verificar_entrada_salida(self) -> None:
+    def check_entry_exit(self) -> None:
         import sys
         assert self.grid is not None
-        errores = []
+        errors = []
 
-        celda_entrada = self.grid[self.entry_y][self.entry_x]
-        celda_salida = self.grid[self.exit_y][self.exit_x]
+        entry_cell = self.grid[self.entry_y][self.entry_x]
+        exit_cell = self.grid[self.exit_y][self.exit_x]
 
-        if celda_entrada == 42:
-            errores.append(
-                f"Error: La entrada {self.entry_x_y} cae sobre una celda "
-                f"bloqueada (marco o patrón 42). Elige otra posición."
+        if entry_cell == 42:
+            errors.append(
+                f"Error: Entry {self.entry_x_y} falls on a blocked cell "
+                f"(frame or 42 pattern). Choose another position."
             )
 
-        if celda_salida == 42:
-            errores.append(
-                f"Error: La salida {self.exit_x_y} cae sobre una celda "
-                f"bloqueada (marco o patrón 42). Elige otra posición."
+        if exit_cell == 42:
+            errors.append(
+                f"Error: Exit {self.exit_x_y} falls on a blocked cell "
+                f"(frame or 42 pattern). Choose another position."
             )
 
-        if errores:
-            print("\nErrores en la configuración del laberinto:")
-            for e in errores:
+        if errors:
+            print("\nErrors in maze configuration:")
+            for e in errors:
                 print("  - ", e)
             sys.exit(1)
+
+    # Spanish aliases were removed; names are English-only now

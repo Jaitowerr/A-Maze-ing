@@ -5,6 +5,6 @@ EXIT=14,3
 OUTPUT_FILE=maze.txt
 #PERFECT=False
 PERFECT=True
-DISPLAY=ascii
+#DISPLAY=ascii
 SEED=42
 #ALGORITHM=kruskal

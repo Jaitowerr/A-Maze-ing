@@ -9,9 +9,9 @@ class Player():
 
     def render(self, m: Any, win: int, map: MazeGenerator) -> None:
         assert map.cfg.pixel is not None
-        assert map.grid_binario is not None
+        assert map.binary_grid is not None
         px = self._x * map.cfg.pixel - (len(
-            map.grid_binario[0])//2) + map.cfg.pixel//4
+            map.binary_grid[0])//2) + map.cfg.pixel//4
         py = self._y * map.cfg.pixel - (len(
-            map.grid_binario)//2) + map.cfg.pixel//4
+            map.binary_grid)//2) + map.cfg.pixel//4
         m.mlx_put_image_to_window(m.mlx_ptr, win, self._img, px, py)

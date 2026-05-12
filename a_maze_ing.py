@@ -16,46 +16,45 @@ def load_tiles(m: Mlx, mlx: int, cfg: MazeConfig) -> dict[str, int]:
     tiles = {}
     for i in range(16):
         key = format(i, "04b")
-        path = f"./{cfg.ruta}/{key}.png"
+        path = f"./{cfg.rut}/{key}.png"
         img, _, _ = m.mlx_png_file_to_image(mlx, path)
         tiles[key] = img
 
     tiles["entry"], _, _ = m.mlx_png_file_to_image(
-        mlx, f"./{cfg.ruta}/entrada.png")
+        mlx, f"./{cfg.rut}/entrada.png")
     tiles["exit"], _, _ = m.mlx_png_file_to_image(
-        mlx, f"./{cfg.ruta}/salida.png")
+        mlx, f"./{cfg.rut}/salida.png")
     tiles["player"], _, _ = m.mlx_png_file_to_image(
-        mlx, f"./{cfg.ruta}/mario1.png")
+        mlx, f"./{cfg.rut}/mario1.png")
     return tiles
 
 
 def programa(parse_config: str) -> None:
-    print('Ejecutando programa...')
+    print('Running program...')
     print(parse_config)
 
 
 def init_sys() -> None:
-    errores = []
+    errors = []
 
     if len(sys.argv) < 2:
-        errores.append('Error: No se ha proporcionado el archivo de '
-                       'configuración.')
+        errors.append('Error: The configuration file has not been provided.')
 
     if len(sys.argv) > 2:
-        errores.append('Error: Demasiados parámetros.')
+        errors.append('Error: Too many parameters.')
 
     if len(sys.argv) == 2:
         if not os.path.exists(sys.argv[1]):
-            errores.append(f"Error: El archivo '{sys.argv[1]}' no existe.")
+            errors.append(f"Error: The file '{sys.argv[1]}' does not exist.")
 
         if sys.argv[1] != 'config.txt':
-            errores.append("Error: El nombre del archivo no es config.txt")
+            errors.append("Error: The file name is not config.txt")
 
-    if errores:
-        print('\nSe encontraron los siguientes errores:')
-        for er in errores:
+    if errors:
+        print('\nThe following errors were found:')
+        for er in errors:
             print('  - ', er)
-        print('\n*** Uso correcto: python3 a_maze_ing.py config.txt\n')
+        print('\n*** Correct usage: python3 a_maze_ing.py config.txt\n')
         sys.exit(1)
     else:
         return
@@ -75,15 +74,15 @@ def key_hook(key: int, control: GameControl) -> None:
     if key == 112:
         pass  # gamecontrol pause false
     if key == 109:
-        control.crear_ascii()
+        control.create_ascii()
     elif key == 49:
-        control.crear_mapa2()
+        control.create_map_recursive()
     elif key == 50:
-        control.crear_mapa1()
+        control.create_map_kruskal()
     elif key == 32:
         control.change_color()
     elif key == 99:
-        control.pintar_ruta()
+        control.paint_path()
 
 
 if __name__ == '__main__':
@@ -92,30 +91,30 @@ if __name__ == '__main__':
     cfg = parse_config(sys.argv[1])
     from src.maze_generator import MazeGenerator
     gen = MazeGenerator(cfg)
-    gen.docu_finish()
+    gen.write_output()
     print(
-        'Existen distintos algoritmos de ejecución,'
-        ' puedes ejegir entre : recursive_backtracker y kruskal')
-    print(f'El algoritmo utilizdo es: {gen.cfg.algorithm}\n')
+        'There are different execution algorithms, '
+        'you can choose between: recursive_backtracker and kruskal')
+    print(f'The algorithm used is: {gen.cfg.algorithm}\n')
     if cfg.display == 'ascii':
         gen.print_maze()
         from src.ascii_menu import ascii_menu
         ascii_menu(gen)
     else:
-        assert gen.grid_binario is not None
+        assert gen.binary_grid is not None
         assert cfg.pixel is not None
         m = Mlx()
         m.mlx_ptr = m.mlx_init()
         win = m.mlx_new_window(
             m.mlx_ptr,
-            len(gen.grid_binario[0]) * cfg.pixel,
-            (len(gen.grid_binario) * cfg.pixel)+80,
+            len(gen.binary_grid[0]) * cfg.pixel,
+            (len(gen.binary_grid) * cfg.pixel)+80,
             "42 maze"
         )
         tiles = load_tiles(m, m.mlx_ptr, cfg)
         player = Player((cfg.entry_x, cfg.entry_y), tiles["player"])
         control = GameControl(m, win, gen, player, tiles)
-        control.crear_mapa2()
+        control.create_map_recursive()
         # ESTO ES SOLO PRUEBA, LUEGO AÑADIRE UN BUEN FUNCIONAMIENTO
         # SOLO ES PARA LA SEPARACION DEL MAPA
 
@@ -124,19 +123,19 @@ if __name__ == '__main__':
 
         m.mlx_put_image_to_window(
             m.mlx_ptr, win, img, 30,
-            (len(gen.grid_binario) * cfg.pixel)+20)
+            (len(gen.binary_grid) * cfg.pixel)+20)
 
         m.mlx_put_image_to_window(
             m.mlx_ptr, win, img, 60+140,
-            (len(gen.grid_binario) * cfg.pixel)+20)
+            (len(gen.binary_grid) * cfg.pixel)+20)
 
         m.mlx_put_image_to_window(
             m.mlx_ptr, win, img, 90+140+140,
-            (len(gen.grid_binario) * cfg.pixel)+20)
+            (len(gen.binary_grid) * cfg.pixel)+20)
 
         m.mlx_put_image_to_window(
             m.mlx_ptr, win, img, 120+140+140+140,
-            (len(gen.grid_binario) * cfg.pixel)+20)
+            (len(gen.binary_grid) * cfg.pixel)+20)
         m.mlx_key_hook(win, key_hook, control)
         m.mlx_hook(win, 17, 0, close_window, m)
         m.mlx_loop(m.mlx_ptr)

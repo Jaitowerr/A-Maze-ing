@@ -4,41 +4,41 @@ import sys
 
 
 def _validar_y_construir(dict_config: dict[str, str]) -> MazeConfig:
-    errores = []
+    errors = []
     required = ['WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT']
     for r in required:
         if r not in dict_config:
-            errores.append(f'Falta clave obligatoria: {r}')
+            errors.append(f'Falta clave obligatoria: {r}')
 
-    if errores:
-        print('\nErrores en config.txt, falta de datos:')
-        for e in errores:
+    if errors:
+        print('\nerrors en config.txt, falta de datos:')
+        for e in errors:
             print('  - ', e)
         sys.exit(1)
 
     try:
         width = int(dict_config['WIDTH'])
     except ValueError:
-        errores.append('WIDTH debe ser un entero')
+        errors.append('WIDTH debe ser un entero')
 
     try:
         height = int(dict_config['HEIGHT'])
     except ValueError:
-        errores.append('HEIGHT debe ser un entero')
+        errors.append('HEIGHT debe ser un entero')
 
     try:
         entry_x, entry_y = map(int, dict_config['ENTRY'].split(','))
     except ValueError:
-        errores.append('ENTRY debe tener formato x,y de enteros. Ejemplo: 0,0')
+        errors.append('ENTRY debe tener formato x,y de enteros. Ejemplo: 0,0')
 
     try:
         exit_x, exit_y = map(int, dict_config['EXIT'].split(','))
     except ValueError:
-        errores.append('EXIT debe tener formato x,y de enteros. '
+        errors.append('EXIT debe tener formato x,y de enteros. '
                        'Ejemplo: 19,14')
 
     if dict_config['PERFECT'] not in ('True', 'False'):
-        errores.append('PERFECT debe ser True o False')
+        errors.append('PERFECT debe ser True o False')
     else:
         perfect = dict_config['PERFECT'] == 'True'
 
@@ -47,62 +47,61 @@ def _validar_y_construir(dict_config: dict[str, str]) -> MazeConfig:
         try:
             seed = int(dict_config['SEED'])
         except ValueError:
-            errores.append('SEED debe ser un entero')
+            errors.append('SEED debe ser un entero')
 
-    ALGORITMOS_VALIDOS = ('recursive_backtracker', 'kruskal')
-    DISPLAYS_VALIDOS = ('mlx', 'ascii')
+    valid_algorithms = ('recursive_backtracker', 'kruskal')
+    valid_display = ('mlx', 'ascii')
 
-    # algorithm = dict_config.get('ALGORITHM', None)
     algorithm = dict_config.get('ALGORITHM', 'recursive_backtracker')
     display = dict_config.get('DISPLAY', 'mlx')
 
     if display == 'mlx':
         if width > 90:
-            errores.append('WIDTH debe ser menor de 90')
+            errors.append('WIDTH debe ser menor de 90')
         if height > 45:
-            errores.append('HEIGHT debe ser menor de 45')
+            errors.append('HEIGHT debe ser menor de 45')
     if display == 'ascii':
         if width > 60:
-            errores.append('WIDTH debe ser menor de 90')
+            errors.append('WIDTH debe ser menor de 90')
         # if height > 600:
-        #     errores.append('HEIGHT debe ser menor de 45')
+        #     errors.append('HEIGHT debe ser menor de 45')
 
-    if algorithm is not None and algorithm not in ALGORITMOS_VALIDOS:
-        errores.append(
-            f'ALGORITHM no válido: {algorithm}. Opciones: {ALGORITMOS_VALIDOS}'
+    if algorithm is not None and algorithm not in valid_algorithms:
+        errors.append(
+            f'ALGORITHM no válido: {algorithm}. Opciones: {valid_algorithms}'
         )
 
-    if display is not None and display not in DISPLAYS_VALIDOS:
-        errores.append(
-            f'DISPLAY no válido: {display}. Opciones: {DISPLAYS_VALIDOS}')
+    if display is not None and display not in valid_display:
+        errors.append(
+            f'DISPLAY no válido: {display}. Opciones: {valid_display}')
 
-    if errores:
-        print('\nErrores en config.txt:')
-        for e in errores:
+    if errors:
+        print('\nerrors en config.txt:')
+        for e in errors:
             print('  - ', e)
         sys.exit(1)
 
     if width <= 0:
-        errores.append('WIDTH debe ser mayor que 0')
+        errors.append('WIDTH debe ser mayor que 0')
     if height <= 0:
-        errores.append('HEIGHT debe ser mayor que 0')
+        errors.append('HEIGHT debe ser mayor que 0')
 
     if entry_x < 0 or entry_x >= width or entry_y < 0 or entry_y >= height:
-        errores.append(
+        errors.append(
             f'ENTRY ({entry_x},{entry_y}) fuera de rango (0-{width - 1}, '
             f'0-{height - 1})')
 
     if exit_x < 0 or exit_x >= width or exit_y < 0 or exit_y >= height:
-        errores.append(
+        errors.append(
             f'EXIT ({exit_x},{exit_y}) fuera de rango (0-{width - 1}, '
             f'0-{height - 1})')
 
     if entry_x == exit_x and entry_y == exit_y:
-        errores.append('ENTRY y EXIT no pueden ser la misma casilla')
+        errors.append('ENTRY y EXIT no pueden ser la misma casilla')
 
-    if errores:
-        print('\nErrores en config.txt:')
-        for e in errores:
+    if errors:
+        print('\nerrors en config.txt:')
+        for e in errors:
             print('  - ', e)
         sys.exit(1)
 
@@ -124,13 +123,13 @@ def _validar_y_construir(dict_config: dict[str, str]) -> MazeConfig:
         algorithm=algorithm,
         display=display,
         pixel=60,
-        ruta="img2/mario",
+        rut="img2/mario",
     )
 
 
 def parse_config(config_txt: str) -> MazeConfig:
     # print(config_txt)
-    errores = []
+    errors = []
     dict_config = {}
 
     with open(config_txt) as config:
@@ -141,32 +140,32 @@ def parse_config(config_txt: str) -> MazeConfig:
                 continue
 
             if '=' not in line:
-                errores.append(f'Línea sin "=": {line}')
+                errors.append(f'Línea sin "=": {line}')
                 continue
 
             key, value = line.split('=')[0], line.split('=')[1]
 
             if not key:
-                errores.append(f'Clave vacía en línea: "{line}"')
+                errors.append(f'Clave vacía en línea: "{line}"')
                 continue
 
             if not value:
-                errores.append(f'Valor vacío en línea: "{line}"')
+                errors.append(f'Valor vacío en línea: "{line}"')
                 continue
 
             if key != key.strip():
-                errores.append(f'Espacios no permitidos en clave: "{line}"')
+                errors.append(f'Espacios no permitidos en clave: "{line}"')
                 continue
 
             if value != value.strip():
-                errores.append(f'Espacios no permitidos en valor: "{line}"')
+                errors.append(f'Espacios no permitidos en valor: "{line}"')
                 continue
 
             dict_config[key] = value
 
-    if errores:
-        print('\nErrores en config.txt:')
-        for e in errores:
+    if errors:
+        print('\nerrors en config.txt:')
+        for e in errors:
             print('  - ', e)
         sys.exit(1)
     else:

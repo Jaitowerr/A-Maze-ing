@@ -53,7 +53,7 @@ def run(gen: MazeGenerator) -> None:
         paredes = []
         for y in range(1, H - 1):
             for x in range(1, W - 1):
-                # Una pared es un 3 que NO fue abierto por el algoritmo
+                # Una pared es un 3 que NO fue abierto por el run_algorithm
                 if grid[y][x] != 3:
                     continue
 

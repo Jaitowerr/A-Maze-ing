@@ -1,62 +1,62 @@
-from .Direcccion import Direccion
+from .Direcccion import Direction
 
 
-class Celda():
+class Cell():
     def __init__(self,
-                 a: int,
-                 b: int,
-                 c: int,
-                 d: int,
-                 bool_42: bool) -> None:
+                 west: int,
+                 south: int,
+                 east: int,
+                 north: int,
+                 is_42: bool) -> None:
         self.walls = {
-            Direccion.OESTE: a,
-            Direccion.SUR: b,
-            Direccion.ESTE: c,
-            Direccion.NORTE: d
+            Direction.WEST: west,
+            Direction.SOUTH: south,
+            Direction.EAST: east,
+            Direction.NORTH: north
         }
-        self.casilla_42 = bool_42
+        self.is_42 = is_42
 
     def bin_to_hexa(self) -> str:
-        oeste = int(self.walls[Direccion.OESTE])
-        sur = int(self.walls[Direccion.SUR])
-        este = int(self.walls[Direccion.ESTE])
-        norte = int(self.walls[Direccion.NORTE])
+        west = int(self.walls[Direction.WEST])
+        south = int(self.walls[Direction.SOUTH])
+        east = int(self.walls[Direction.EAST])
+        north = int(self.walls[Direction.NORTH])
 
-        valor = oeste
-        valor = (valor * 10) + sur
-        valor = (valor * 10) + este
-        valor = (valor * 10) + norte
+        value = west
+        value = (value * 10) + south
+        value = (value * 10) + east
+        value = (value * 10) + north
 
-        if valor == 0:
+        if value == 0:
             return '0'
-        if valor == 1:
+        if value == 1:
             return '1'
-        if valor == 10:
+        if value == 10:
             return '2'
-        if valor == 11:
+        if value == 11:
             return '3'
-        if valor == 100:
+        if value == 100:
             return '4'
-        if valor == 101:
+        if value == 101:
             return '5'
-        if valor == 110:
+        if value == 110:
             return '6'
-        if valor == 111:
+        if value == 111:
             return '7'
-        if valor == 1000:
+        if value == 1000:
             return '8'
-        if valor == 1001:
+        if value == 1001:
             return '9'
-        if valor == 1010:
+        if value == 1010:
             return 'A'
-        if valor == 1011:
+        if value == 1011:
             return 'B'
-        if valor == 1100:
+        if value == 1100:
             return 'C'
-        if valor == 1101:
+        if value == 1101:
             return 'D'
-        if valor == 1110:
+        if value == 1110:
             return 'E'
-        if valor == 1111:
+        if value == 1111:
             return 'F'
         return '0'
