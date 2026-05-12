@@ -128,7 +128,6 @@ def _validar_y_construir(dict_config: dict[str, str]) -> MazeConfig:
 
 
 def parse_config(config_txt: str) -> MazeConfig:
-    # print(config_txt)
     errors = []
     dict_config = {}
 
@@ -160,7 +159,9 @@ def parse_config(config_txt: str) -> MazeConfig:
             if value != value.strip():
                 errors.append(f'Espacios no permitidos en valor: "{line}"')
                 continue
-
+            if key in dict_config:
+                errors.append(f'Clave duplicada: "{key}"')
+                continue
             dict_config[key] = value
 
     if errors:
