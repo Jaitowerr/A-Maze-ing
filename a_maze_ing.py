@@ -5,7 +5,7 @@ import os
 from src.GameControl import GameControl
 from src.Player import Player
 from src.map import MazeConfig
-from mlx import Mlx  # type: ignore[import-untyped]
+from mlx import Mlx
 
 
 def draw_tile(m: Mlx, mlx: int, win: int, img: int, x: int, y: int) -> None:
@@ -70,8 +70,6 @@ def key_hook(key: int, control: GameControl) -> None:
         control._m.mlx_loop_exit(control._m.mlx_ptr)
     if 65361 <= key <= 65364 or key in botones:
         control.move_player(key)
-    if key == 112:
-        pass  # gamecontrol pause false
     if key == 109:
         control.create_ascii()
     elif key == 49:
@@ -114,34 +112,24 @@ if __name__ == '__main__':
         player = Player((cfg.entry_x, cfg.entry_y), tiles["player"])
         control = GameControl(m, win, gen, player, tiles)
         control.create_map_recursive()
-        # ESTO ES SOLO PRUEBA, LUEGO AÑADIRE UN BUEN FUNCIONAMIENTO
-        # SOLO ES PARA LA SEPARACION DEL MAPA
-
-        img, _, _ = m.mlx_png_file_to_image(
-            m.mlx_ptr, "./img/play.png")
-        esc, _, _ = m.mlx_png_file_to_image(
-            m.mlx_ptr, "./img/esc.png")
-        space, _, _ = m.mlx_png_file_to_image(
-            m.mlx_ptr, "./img/space.png")
-        c, _, _ = m.mlx_png_file_to_image(
-            m.mlx_ptr, "./img/color.png")
 
         width_pixel = len(gen.binary_grid[0]) * cfg.pixel //4
-        m.mlx_put_image_to_window(
-            m.mlx_ptr, win, img, 0,
-            (len(gen.binary_grid) * cfg.pixel)+20)
+        m.mlx_string_put(m.mlx_ptr, win, 0, (len(gen.binary_grid) * cfg.pixel)+20, 0xFFFFFF, "COLOR: C")
+        m.mlx_string_put(
+            m.mlx_ptr, win, 0,
+            (len(gen.binary_grid) * cfg.pixel)+20, 0xFFFFFF, "COLOR: C")
 
-        m.mlx_put_image_to_window(
-            m.mlx_ptr, win, esc, width_pixel,
-            (len(gen.binary_grid) * cfg.pixel)+20)
+        m.mlx_string_put(
+            m.mlx_ptr, win, width_pixel,
+            (len(gen.binary_grid) * cfg.pixel)+20, 0xFFFFFF, "CAMINO: SPACE")
 
-        m.mlx_put_image_to_window(
-            m.mlx_ptr, win, space, width_pixel*2,
-            (len(gen.binary_grid) * cfg.pixel)+20)
+        m.mlx_string_put(
+            m.mlx_ptr, win, width_pixel*2,
+            (len(gen.binary_grid) * cfg.pixel)+20, 0xFFFFFF, "SALIR: ESC")
 
-        m.mlx_put_image_to_window(
-            m.mlx_ptr, win, c, width_pixel*3,
-            (len(gen.binary_grid) * cfg.pixel)+20)
+        m.mlx_string_put(
+            m.mlx_ptr, win, width_pixel*3,
+            (len(gen.binary_grid) * cfg.pixel)+20, 0xFFFFFF, "CHANGE: 1 2")
         m.mlx_key_hook(win, key_hook, control)
         m.mlx_hook(win, 17, 0, close_window, m)
         m.mlx_loop(m.mlx_ptr)
