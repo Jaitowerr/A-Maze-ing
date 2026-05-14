@@ -179,6 +179,7 @@ class GameControl:
         self._player.render(self._m, self._win, self._map)
         self._map.build_hex_grid()
         self._map.shortest_path()
+        self._map.write_output()
 
     def create_map_recursive(self) -> None:
         """Generate and display a maze using recursive backtracker.
@@ -195,6 +196,7 @@ class GameControl:
         self._player.render(self._m, self._win, self._map)
         self._map.build_hex_grid()
         self._map.shortest_path()
+        self._map.write_output()
 
     def create_ascii(self) -> None:
         """Print the maze to the console in ASCII mode.

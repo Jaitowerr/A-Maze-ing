@@ -168,9 +168,11 @@ if __name__ == '__main__':
             "42 maze"
         )
         tiles = load_tiles(m, m.mlx_ptr, cfg)
-        player = Player((cfg.entry_x, cfg.entry_y), tiles["player"])
+        player = Player((cfg.entry_x_y[0], cfg.entry_x_y[1]), tiles["player"])
         control = GameControl(m, win, gen, player, tiles)
-        control.create_map_recursive()
+        gen.draw_maze(m,m.mlx_ptr,win,tiles)
+        player.render(m,win,gen)
+        #control.create_map_recursive()
 
         width_pixel = len(gen.binary_grid[0]) * cfg.pixel // 4
         m.mlx_string_put(m.mlx_ptr, win, 0, (len(
