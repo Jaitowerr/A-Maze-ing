@@ -165,7 +165,8 @@ class MazeGenerator:
     def print_maze_path(self,
                         color_grid: str = '\033[32m',
                         color_bg_way: str = '\033[35m',
-                        icons: Optional[dict[str, str]] = None) -> tuple[str, str]:
+                        icons: Optional[dict[str, str]] = None) -> tuple[
+                            str, str]:
         if icons is None:
             icons = {'PARED_H': '---', 'PARED_V': '|', 'ESQUINA': '+'}
         assert self.path is not None
@@ -270,14 +271,16 @@ class MazeGenerator:
                         mlx, win, img,
                         px - (len(self.binary_grid[0]) //
                               2) + self.cfg.pixel // 4,
-                        py - (len(self.binary_grid) // 2) + self.cfg.pixel // 4)
+                        py - (len(
+                            self.binary_grid) // 2) + self.cfg.pixel // 4)
                 elif self.cfg.exit_x_y == [x, y]:
                     img = tiles["exit"]
                     m.mlx_put_image_to_window(
                         mlx, win, img,
                         px - (len(self.binary_grid[0]) //
                               2) + self.cfg.pixel // 4,
-                        py - (len(self.binary_grid) // 2) + self.cfg.pixel // 4)
+                        py - (len(
+                            self.binary_grid) // 2) + self.cfg.pixel // 4)
 
     def shortest_path(self) -> Optional[str]:
         assert self.binary_grid is not None
@@ -323,3 +326,4 @@ class MazeGenerator:
 
         directions.reverse()
         self.path = ''.join(directions)
+        return self.path

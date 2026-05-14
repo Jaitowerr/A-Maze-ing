@@ -53,11 +53,13 @@ class GameControl:
         self._player._x = new_x
         self._player._y = new_y
         self._player.render(self._m, self._win, self._map)
-        if self._player._x == self._map.cfg.exit_x_y[0] and self._player._y == self._map.cfg.exit_x_y[1]:
+        if (self._player._x == self._map.cfg.exit_x_y[0]
+                and self._player._y == self._map.cfg.exit_x_y[1]):
             self._m.mlx_loop_exit(self._m.mlx_ptr)
 
     def change_color(self) -> None:
-        color_list = ["img2/mario/colores1", "img2/mario/colores", "img2/mario/colores2"]
+        color_list = ["img2/mario/colores1",
+                      "img2/mario/colores", "img2/mario/colores2"]
         random.shuffle(color_list)
         self._map.cfg.rut = color_list[0]
         from a_maze_ing import load_tiles
@@ -114,7 +116,9 @@ class GameControl:
                     self._mlx, f"./{self._map.cfg.rut}/{key}.png"
                 )
                 self._m.mlx_put_image_to_window(
-                    self._mlx, self._win, tile, x * self._map.cfg.pixel, y * self._map.cfg.pixel
+                    self._mlx, self._win, tile,
+                    x * self._map.cfg.pixel,
+                    y * self._map.cfg.pixel
                 )
                 self._state = True
         img = self._tiles["exit"]
@@ -125,7 +129,8 @@ class GameControl:
             self._mlx,
             self._win,
             img,
-            x - (len(self._map.binary_grid[0]) // 2) + self._map.cfg.pixel // 4,
+            x - (len(self._map.binary_grid[0]) //
+                 2) + self._map.cfg.pixel // 4,
             y - (len(self._map.binary_grid) // 2) + self._map.cfg.pixel // 4,
         )
         self._player.render(self._m, self._win, self._map)

@@ -3,15 +3,15 @@ from .map import MazeConfig
 import sys
 
 
-def _validar_y_construir(dict_config: dict[str, str]) -> MazeConfig:
+def _validate_and_build(dict_config: dict[str, str]) -> MazeConfig:
     errors = []
     required = ['WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT']
     for r in required:
         if r not in dict_config:
-            errors.append(f'Falta clave obligatoria: {r}')
+            errors.append(f'Missing required key: {r}')
 
     if errors:
-        print('\nerrors en config.txt, falta de datos:')
+        print('\nerrors in config.txt, missing data:')
         for e in errors:
             print('  - ', e)
         sys.exit(1)
@@ -19,35 +19,36 @@ def _validar_y_construir(dict_config: dict[str, str]) -> MazeConfig:
     try:
         width = int(dict_config['WIDTH'])
     except ValueError:
-        errors.append('WIDTH debe ser un entero')
+        errors.append('WIDTH must be an integer')
 
     try:
         height = int(dict_config['HEIGHT'])
     except ValueError:
-        errors.append('HEIGHT debe ser un entero')
+        errors.append('HEIGHT must be an integer')
 
     try:
         entry_x, entry_y = map(int, dict_config['ENTRY'].split(','))
     except ValueError:
-        errors.append('ENTRY debe tener formato x,y de enteros. Ejemplo: 0,0')
+        errors.append(
+            'ENTRY must be in the format x,y of integers. Example: 0,0')
 
     try:
         exit_x, exit_y = map(int, dict_config['EXIT'].split(','))
     except ValueError:
-        errors.append('EXIT debe tener formato x,y de enteros. '
-                       'Ejemplo: 19,14')
+        errors.append('EXIT must have the format x,y of integers.'
+                      'Example: 19,14')
 
     if dict_config['PERFECT'] not in ('True', 'False'):
-        errors.append('PERFECT debe ser True o False')
+        errors.append('PERFECT must be True or False')
     else:
         perfect = dict_config['PERFECT'] == 'True'
 
     seed = None
     if 'SEED' in dict_config:
         try:
-            seed = int(dict_config['SEED'])
+            seed = int(dict_config['SEED']) or str(dict_config['SEED'])
         except ValueError:
-            errors.append('SEED debe ser un entero')
+            errors.append('SEED must be an integer or a string of characters')
 
     valid_algorithms = ('recursive_backtracker', 'kruskal')
     valid_display = ('mlx', 'ascii')
@@ -57,50 +58,48 @@ def _validar_y_construir(dict_config: dict[str, str]) -> MazeConfig:
 
     if display == 'mlx':
         if width > 90:
-            errors.append('WIDTH debe ser menor de 90')
+            errors.append('WIDTH must be less than 90')
         if height > 45:
-            errors.append('HEIGHT debe ser menor de 45')
+            errors.append('HEIGHT must be less than 45')
     if display == 'ascii':
         if width > 60:
-            errors.append('WIDTH debe ser menor de 90')
-        # if height > 600:
-        #     errors.append('HEIGHT debe ser menor de 45')
+            errors.append('WIDTH must be less than 90')
 
     if algorithm is not None and algorithm not in valid_algorithms:
         errors.append(
-            f'ALGORITHM no válido: {algorithm}. Opciones: {valid_algorithms}'
+            f'Invalid ALGORITHM: {algorithm}. Options: {valid_algorithms}'
         )
 
     if display is not None and display not in valid_display:
         errors.append(
-            f'DISPLAY no válido: {display}. Opciones: {valid_display}')
+            f'Invalid display: {display}. Options: {valid_display}')
 
     if errors:
-        print('\nerrors en config.txt:')
+        print('\nerrors in config.txt:')
         for e in errors:
             print('  - ', e)
         sys.exit(1)
 
     if width <= 0:
-        errors.append('WIDTH debe ser mayor que 0')
+        errors.append('WIDTH must be greater than 0')
     if height <= 0:
-        errors.append('HEIGHT debe ser mayor que 0')
+        errors.append('HEIGHT must be greater than 0')
 
     if entry_x < 0 or entry_x >= width or entry_y < 0 or entry_y >= height:
         errors.append(
-            f'ENTRY ({entry_x},{entry_y}) fuera de rango (0-{width - 1}, '
+            f'ENTRY ({entry_x},{entry_y}) out of range (0-{width - 1}, '
             f'0-{height - 1})')
 
     if exit_x < 0 or exit_x >= width or exit_y < 0 or exit_y >= height:
         errors.append(
-            f'EXIT ({exit_x},{exit_y}) fuera de rango (0-{width - 1}, '
+            f'EXIT ({exit_x},{exit_y}) out of range (0-{width - 1}, '
             f'0-{height - 1})')
 
     if entry_x == exit_x and entry_y == exit_y:
-        errors.append('ENTRY y EXIT no pueden ser la misma casilla')
+        errors.append('ENTRY and EXIT cannot be the same box')
 
     if errors:
-        print('\nerrors en config.txt:')
+        print('\nerrors in config.txt:')
         for e in errors:
             print('  - ', e)
         sys.exit(1)
@@ -139,35 +138,35 @@ def parse_config(config_txt: str) -> MazeConfig:
                 continue
 
             if '=' not in line:
-                errors.append(f'Línea sin "=": {line}')
+                errors.append(f'Line without "=":{line}')
                 continue
 
             key, value = line.split('=')[0], line.split('=')[1]
 
             if not key:
-                errors.append(f'Clave vacía en línea: "{line}"')
+                errors.append(f'Empty key online:"{line}"')
                 continue
 
             if not value:
-                errors.append(f'Valor vacío en línea: "{line}"')
+                errors.append(f'Empty value in line:"{line}"')
                 continue
 
             if key != key.strip():
-                errors.append(f'Espacios no permitidos en clave: "{line}"')
+                errors.append(f'Spaces not allowed in the code:"{line}"')
                 continue
 
             if value != value.strip():
-                errors.append(f'Espacios no permitidos en valor: "{line}"')
+                errors.append(f'Spaces not permitted in value:"{line}"')
                 continue
             if key in dict_config:
-                errors.append(f'Clave duplicada: "{key}"')
+                errors.append(f'Duplicate key:"{key}"')
                 continue
             dict_config[key] = value
 
     if errors:
-        print('\nerrors en config.txt:')
+        print('\nerrors in config.txt:')
         for e in errors:
             print('  - ', e)
         sys.exit(1)
     else:
-        return _validar_y_construir(dict_config)
+        return _validate_and_build(dict_config)

@@ -5,7 +5,7 @@ import os
 from src.GameControl import GameControl
 from src.Player import Player
 from src.map import MazeConfig
-from mlx import Mlx
+from mlx import Mlx  # mypy: disable-error-code="import-untyped"
 
 
 def draw_tile(m: Mlx, mlx: int, win: int, img: int, x: int, y: int) -> None:
@@ -113,8 +113,9 @@ if __name__ == '__main__':
         control = GameControl(m, win, gen, player, tiles)
         control.create_map_recursive()
 
-        width_pixel = len(gen.binary_grid[0]) * cfg.pixel //4
-        m.mlx_string_put(m.mlx_ptr, win, 0, (len(gen.binary_grid) * cfg.pixel)+20, 0xFFFFFF, "COLOR: C")
+        width_pixel = len(gen.binary_grid[0]) * cfg.pixel // 4
+        m.mlx_string_put(m.mlx_ptr, win, 0, (len(
+            gen.binary_grid) * cfg.pixel)+20, 0xFFFFFF, "COLOR: C")
         m.mlx_string_put(
             m.mlx_ptr, win, 0,
             (len(gen.binary_grid) * cfg.pixel)+20, 0xFFFFFF, "COLOR: C")

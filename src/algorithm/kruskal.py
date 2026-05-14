@@ -3,7 +3,7 @@ import random
 from ..dsu import DSU
 
 
-def add_loops(map: MazeGenerator, probability=0.10):
+def add_loops(map: MazeGenerator, probability: float = 0.10) -> None:
 
     H = len(map.grid)
     W = len(map.grid[0])

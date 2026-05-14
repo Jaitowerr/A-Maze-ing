@@ -102,7 +102,7 @@ def ascii_menu(gen: MazeGenerator) -> bool:
         elif option == '3':
             os.system('clear')
             print('\n\nPressed 3, changing colors randomly\n')
-            
+
             color_grid = color_random()
             while color_grid == color_bg_way:
                 color_grid = color_random()
@@ -119,7 +119,7 @@ def ascii_menu(gen: MazeGenerator) -> bool:
             os.system('clear')
             if gen.cfg.center_42:
                 print('\n\nPressed 4, changing 42 background color\n')
-                
+
                 color_bg_way = color_random()
                 while color_bg_way == color_grid:
                     color_bg_way = color_random()
@@ -163,6 +163,6 @@ def ascii_menu(gen: MazeGenerator) -> bool:
 
         else:
             if gen.cfg.center_42:
-                    print("Invalid option. Use 1, 2, 3, 4, 5 or q.")
+                print("Invalid option. Use 1, 2, 3, 4, 5 or q.")
             else:
-                    print("Invalid option. Use 1, 2, 3, 4 or q.")
+                print("Invalid option. Use 1, 2, 3, 4 or q.")
