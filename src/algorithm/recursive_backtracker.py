@@ -1,8 +1,20 @@
-import random
 from ..maze_generator import MazeGenerator
+import random
 
 
 def run(gen: MazeGenerator) -> None:
+    """Carve a maze using the recursive backtracker algorithm.
+
+    The algorithm performs a randomized DFS to open walls between
+    cells. If the maze is not required to be perfect, a few random
+    walls are removed to create loops.
+
+    Args:
+        gen: MazeGenerator instance containing the grid and config.
+
+    Returns:
+        None
+    """
     cfg = gen.cfg
     grid = gen.grid
 
@@ -53,20 +65,20 @@ def run(gen: MazeGenerator) -> None:
         paredes = []
         for y in range(1, H - 1):
             for x in range(1, W - 1):
-                # Una pared es un 3 que NO fue abierto por el run_algorithm
+                # A wall is a 3 that was not opened by the algorithm
                 if grid[y][x] != 3:
                     continue
 
-                # pared vertical (separa izquierda/derecha)
+                # vertical wall (separates left/right)
                 if y % 2 == 1 and x % 2 == 0:
                     c1, c2 = (y, x - 1), (y, x + 1)
-                # pared horizontal (separa arriba/abajo)
+                # horizontal wall (separates up/down)
                 elif y % 2 == 0 and x % 2 == 1:
                     c1, c2 = (y - 1, x), (y + 1, x)
                 else:
                     continue
 
-                # Solo si ambas celdas vecinas son parte del laberinto
+                # Only if both neighbor cells are part of the maze
                 if c1 in visited and c2 in visited:
                     paredes.append((y, x))
 

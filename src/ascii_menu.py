@@ -4,6 +4,14 @@ from .maze_generator import MazeGenerator
 
 
 def print_menu(gen: "MazeGenerator") -> None:
+    """Print the ASCII menu to the terminal.
+
+    Args:
+        gen: MazeGenerator instance used to query configuration.
+
+    Returns:
+        None
+    """
     print('\033[97m')
     print("\n--- MENU ---")
     print("  1. Generate a new maze")
@@ -18,6 +26,11 @@ def print_menu(gen: "MazeGenerator") -> None:
 
 
 def color_random() -> str:
+    """Return a random ANSI color escape sequence.
+
+    Returns:
+        A string with an ANSI color escape sequence.
+    """
     texto = {
         "verde":      "\033[32m",
         "amarillo":   "\033[33m",
@@ -31,6 +44,14 @@ def color_random() -> str:
 
 
 def _get_style_chars(style: int) -> dict[str, str]:
+    """Return a mapping of characters for the given style id.
+
+    Args:
+        style: Style identifier number.
+
+    Returns:
+        A dict mapping style keys to display strings.
+    """
     if style == 1:      # simples
         return {'PARED_H': '───', 'PARED_V': '│', 'ESQUINA': '┼'}
     elif style == 2:    # dobles
@@ -55,6 +76,17 @@ def _get_style_chars(style: int) -> dict[str, str]:
 
 
 def ascii_menu(gen: MazeGenerator) -> bool:
+    """Run an interactive ASCII menu loop for the maze.
+
+    The function shows a menu, reads user input and triggers actions on
+    the provided MazeGenerator. It returns False when the user quits.
+
+    Args:
+        gen: MazeGenerator instance to operate on.
+
+    Returns:
+        False when exiting the menu, True otherwise (keeps running).
+    """
     print_menu(gen)
     color_grid = '\033[34m'
     color_bg_way = '\033[33m'

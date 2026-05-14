@@ -4,6 +4,17 @@ import sys
 
 
 def _validate_and_build(dict_config: dict[str, str]) -> MazeConfig:
+    """Validate parsed config values and return a MazeConfig.
+
+    Args:
+        dict_config: Mapping of configuration keys to raw string values.
+
+    Returns:
+        A validated MazeConfig instance constructed from inputs.
+
+    Exits:
+        Exits the program with code 1 and prints errors on invalid input.
+    """
     errors = []
     required = ['WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT']
     for r in required:
@@ -127,8 +138,23 @@ def _validate_and_build(dict_config: dict[str, str]) -> MazeConfig:
 
 
 def parse_config(config_txt: str) -> MazeConfig:
-    errors = []
-    dict_config = {}
+    """Parse the config file and return a validated MazeConfig.
+
+    The parser reads key=value lines, ignores comments and blank lines,
+    and enforces simple formatting rules. It returns a MazeConfig built
+    from the validated values.
+
+    Args:
+        config_txt: Path to the configuration file.
+
+    Returns:
+        A MazeConfig instance.
+
+    Exits:
+        Exits the program with code 1 and prints errors on invalid input.
+    """
+    errors: list[str] = []
+    dict_config: dict[str, str] = {}
 
     with open(config_txt) as config:
         for line in config:

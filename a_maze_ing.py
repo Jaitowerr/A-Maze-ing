@@ -9,10 +9,36 @@ from mlx import Mlx  # mypy: disable-error-code="import-untyped"
 
 
 def draw_tile(m: Mlx, mlx: int, win: int, img: int, x: int, y: int) -> None:
+    """Draw a tile image at the given pixel coordinates.
+
+    Args:
+        m: Mlx instance used to draw images.
+        mlx: The mlx pointer for the current session.
+        win: The window identifier.
+        img: The image identifier to draw.
+        x: X coordinate in pixels.
+        y: Y coordinate in pixels.
+
+    Returns:
+        None
+    """
     m.mlx_put_image_to_window(mlx, win, img, x, y)
 
 
 def load_tiles(m: Mlx, mlx: int, cfg: MazeConfig) -> dict[str, int]:
+    """Load tile images from disk and return a mapping.
+
+    The function loads 16 tile images and special images for entry,
+    exit and the player from the configured resource directory.
+
+    Args:
+        m: Mlx instance used to load PNG files.
+        mlx: The mlx pointer for the current session.
+        cfg: Maze configuration providing the resource path.
+
+    Returns:
+        A dictionary mapping tile keys to image identifiers.
+    """
     tiles = {}
     for i in range(16):
         key = format(i, "04b")
@@ -30,11 +56,27 @@ def load_tiles(m: Mlx, mlx: int, cfg: MazeConfig) -> dict[str, int]:
 
 
 def programa(parse_config: str) -> None:
+    """Simple placeholder that prints the given configuration.
+
+    Args:
+        parse_config: The configuration string or object to display.
+
+    Returns:
+        None
+    """
     print('Running program...')
     print(parse_config)
 
 
 def init_sys() -> None:
+    """Validate command line arguments and exit on error.
+
+    The function checks the number and name of command line
+    parameters and exits with an error message if validation fails.
+
+    Returns:
+        None
+    """
     errors = []
 
     if len(sys.argv) < 2:
@@ -61,10 +103,27 @@ def init_sys() -> None:
 
 
 def close_window(param: Mlx) -> None:
+    """Terminate the mlx event loop and close the window.
+
+    Args:
+        param: The Mlx instance holding the loop pointer.
+
+    Returns:
+        None
+    """
     param.mlx_loop_exit(param.mlx_ptr)
 
 
 def key_hook(key: int, control: GameControl) -> None:
+    """Handle key events and forward actions to the game control.
+
+    Args:
+        key: Numeric key code received from the window system.
+        control: GameControl instance to route commands to.
+
+    Returns:
+        None
+    """
     botones = [119, 115, 97, 100]
     if key == 65307:
         control._m.mlx_loop_exit(control._m.mlx_ptr)

@@ -3,45 +3,19 @@ import random
 from ..dsu import DSU
 
 
-def add_loops(map: MazeGenerator, probability: float = 0.10) -> None:
-
-    H = len(map.grid)
-    W = len(map.grid[0])
-
-    for y in range(1, H - 1):
-        for x in range(1, W - 1):
-
-            if map.grid[y][x] != 3:
-                continue
-
-            # SOLO paredes válidas
-
-            # pared vertical
-            if y % 2 == 1 and x % 2 == 0:
-                c1 = (y, x - 1)
-                c2 = (y, x + 1)
-
-            # pared horizontal
-            elif y % 2 == 0 and x % 2 == 1:
-                c1 = (y - 1, x)
-                c2 = (y + 1, x)
-
-            else:
-                # esto es un pilar -> NO romper
-                continue
-
-            # ambas celdas deben ser pasillos
-            if map.grid[c1[0]][c1[1]] not in (0, 4, 5):
-                continue
-
-            if map.grid[c2[0]][c2[1]] not in (0, 4, 5):
-                continue
-
-            if random.random() < probability:
-                map.grid[y][x] = 0
-
-
 def run(map: MazeGenerator) -> None:
+    """Generate a maze using Kruskal's algorithm.
+
+    The function builds a list of candidate walls, shuffles them and
+    removes walls that connect two different components. Optionally
+    some loops are added when the maze is not perfect.
+
+    Args:
+        map: MazeGenerator instance with grid and configuration.
+
+    Returns:
+        None
+    """
     sy, sx = map.cfg.entry_y, map.cfg.entry_x
     ey, ex = map.cfg.exit_y, map.cfg.exit_x
     cells = []
@@ -80,3 +54,50 @@ def run(map: MazeGenerator) -> None:
     map.grid[ey][ex] = 5
     if not map.cfg.perfect:
         add_loops(map, 0.10)
+
+
+def add_loops(map: MazeGenerator, probability: float = 0.10) -> None:
+    """Randomly remove some walls to create loops in the maze.
+
+    Args:
+        map: MazeGenerator with grid data.
+        probability: Chance to remove a valid wall.
+
+    Returns:
+        None
+    """
+
+    H = len(map.grid)
+    W = len(map.grid[0])
+
+    for y in range(1, H - 1):
+        for x in range(1, W - 1):
+
+            if map.grid[y][x] != 3:
+                continue
+
+            # only valid walls
+
+            # vertical wall
+            if y % 2 == 1 and x % 2 == 0:
+                c1 = (y, x - 1)
+                c2 = (y, x + 1)
+
+            # horizontal wall
+            elif y % 2 == 0 and x % 2 == 1:
+                c1 = (y - 1, x)
+                c2 = (y + 1, x)
+
+            else:
+                # this is a pillar -> do not break
+                continue
+
+            # both neighbor cells must be passages
+            if map.grid[c1[0]][c1[1]] not in (0, 4, 5):
+                continue
+
+            if map.grid[c2[0]][c2[1]] not in (0, 4, 5):
+                continue
+
+            if random.random() < probability:
+                map.grid[y][x] = 0

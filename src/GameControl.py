@@ -24,9 +24,25 @@ class GameControl:
         self._color: list[Any] = [False, ""]
 
     def set_state(self, param: bool) -> None:
+        """Set the internal drawing state flag.
+
+        Args:
+            param: Boolean state value to set.
+
+        Returns:
+            None
+        """
         self._state = param
 
     def move_player(self, key: int) -> None:
+        """Move the player based on a key code if the way is open.
+
+        Args:
+            key: Numeric key code received from input.
+
+        Returns:
+            None
+        """
         dx = 0
         dy = 0
         cell = self._map.get_cell(self._player._x, self._player._y)
@@ -58,6 +74,11 @@ class GameControl:
             self._m.mlx_loop_exit(self._m.mlx_ptr)
 
     def change_color(self) -> None:
+        """Change the tile color set randomly and redraw the map.
+
+        Returns:
+            None
+        """
         color_list = ["img2/mario/colores1",
                       "img2/mario/colores", "img2/mario/colores2"]
         random.shuffle(color_list)
@@ -70,6 +91,13 @@ class GameControl:
         self._color = [True, self._map.cfg.rut]
 
     def paint_path(self) -> None:
+        """Paint or clear the solution path on the displayed map.
+
+        The method toggles between showing the path and restoring tiles.
+
+        Returns:
+            None
+        """
         assert self._map.path is not None
         assert self._map.cfg.pixel is not None
         assert self._map.binary_grid is not None
@@ -136,6 +164,11 @@ class GameControl:
         self._player.render(self._m, self._win, self._map)
 
     def create_map_kruskal(self) -> None:
+        """Generate and display a maze using Kruskal's algorithm.
+
+        Returns:
+            None
+        """
         self._map.cfg.algorithm = "kruskal"
         self._map.reset()
         self._map.run_algorithm()
@@ -148,6 +181,11 @@ class GameControl:
         self._map.shortest_path()
 
     def create_map_recursive(self) -> None:
+        """Generate and display a maze using recursive backtracker.
+
+        Returns:
+            None
+        """
         self._map.reset()
         self._map.run_algorithm()
         self._map.build_binary_grid()
@@ -159,4 +197,9 @@ class GameControl:
         self._map.shortest_path()
 
     def create_ascii(self) -> None:
+        """Print the maze to the console in ASCII mode.
+
+        Returns:
+            None
+        """
         self._map.print_maze()

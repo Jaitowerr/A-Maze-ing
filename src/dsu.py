@@ -1,13 +1,30 @@
-class DSU():
+class DSU:
     def __init__(self) -> None:
         self._parent: dict[tuple[int, int], tuple[int, int]] = {}
 
     def find(self, x: tuple[int, int]) -> tuple[int, int]:
+        """Find the representative parent of element x with path compression.
+
+        Args:
+            x: Coordinate tuple representing a cell.
+
+        Returns:
+            The representative coordinate for the component.
+        """
         if self._parent[x] != x:
             self._parent[x] = self.find(self._parent[x])
         return self._parent[x]
 
     def union(self, a: tuple[int, int], b: tuple[int, int]) -> None:
+        """Union the components containing a and b.
+
+        Args:
+            a: First cell coordinate.
+            b: Second cell coordinate.
+
+        Returns:
+            None
+        """
         ra = self.find(a)
         rb = self.find(b)
         if ra != rb:

@@ -34,10 +34,24 @@ class MazeConfig:
         random.seed(self.seed)
 
     def init_grid(self) -> None:
-        self.grid = [[1 for _ in range(self.width)]
-                     for _ in range(self.height)]
+        """Initialize the grid to a filled state.
+
+        The grid is set to a 2D list filled with 1 values representing
+        walls before maze carving begins.
+
+        Returns:
+            None
+        """
+        self.grid = [
+            [1 for _ in range(self.width)]
+            for _ in range(self.height)]
 
     def print_grid(self) -> None:
+        """Print the internal grid to stdout for debugging.
+
+        Returns:
+            None
+        """
         assert self.grid is not None
         for row in self.grid:
             for idx, val in enumerate(row):
@@ -46,6 +60,14 @@ class MazeConfig:
             print()
 
     def build_42(self) -> None:
+        """Add the '42' pattern into the grid when enabled.
+
+        The method writes a predefined pattern into the center of the
+        grid marking those cells with the value 42.
+
+        Returns:
+            None
+        """
         if not self.center_42:
             return
         assert self.grid is not None
@@ -69,6 +91,14 @@ class MazeConfig:
                         self.grid[top + r][left + c] = 42
 
     def add_frame(self) -> None:
+        """Add a border frame around the grid and adjust coordinates.
+
+        The frame is represented with the value 2 and the entry/exit
+        coordinates are shifted accordingly.
+
+        Returns:
+            None
+        """
         assert self.grid is not None
         top = [2] * self.width
         bot = [2] * self.width
@@ -88,6 +118,14 @@ class MazeConfig:
         self.height += 2
 
     def add_grid_lines(self) -> None:
+        """Insert grid line markers between cells.
+
+        The method transforms the internal grid to include separators and
+        updates dimensions and entry/exit coordinates accordingly.
+
+        Returns:
+            None
+        """
         assert self.grid is not None
         old_h = len(self.grid)
 
@@ -102,8 +140,7 @@ class MazeConfig:
             new_grid.append(new_row)
 
             if i != old_h - 1:
-                sep_row = [3 if k %
-                           2 == 0 else 2 for k in range(len(new_row))]
+                sep_row = [3 if k % 2 == 0 else 2 for k in range(len(new_row))]
                 new_grid.append(sep_row)
 
         self.grid = new_grid
@@ -117,6 +154,14 @@ class MazeConfig:
         self.exit_y = self.exit_y * 2
 
     def protect_42(self) -> None:
+        """Protect the 42 area by converting nearby separators to frame.
+
+        This prevents carving paths into the 42 pattern by converting
+        grid separators adjacent to a 42 cell into frame values.
+
+        Returns:
+            None
+        """
         if not self.center_42:
             return
         assert self.grid is not None
@@ -135,18 +180,32 @@ class MazeConfig:
                     if c + 1 < len(row) and self.grid[r][c + 1] == 3:
                         to_set.add((r, c + 1))
                     # arriba
-                    if (r - 1 >= 0 and c < len(self.grid[r - 1])
-                            and self.grid[r - 1][c] == 3):
+                    if (
+                        r - 1 >= 0
+                        and c < len(self.grid[r - 1])
+                        and self.grid[r - 1][c] == 3
+                    ):
                         to_set.add((r - 1, c))
                     # abajo
-                    if (r + 1 < rows and c < len(self.grid[r + 1])
-                            and self.grid[r + 1][c] == 3):
+                    if (
+                        r + 1 < rows
+                        and c < len(self.grid[r + 1])
+                        and self.grid[r + 1][c] == 3
+                    ):
                         to_set.add((r + 1, c))
 
         for (r, c) in to_set:
             self.grid[r][c] = 2
 
     def check_entry_exit(self) -> None:
+        """Ensure entry and exit are not located on blocked cells.
+
+        Exits the program with an error if entry or exit falls inside
+        the 42 pattern or frame.
+
+        Returns:
+            None
+        """
         import sys
         assert self.grid is not None
         errors = []
@@ -171,5 +230,3 @@ class MazeConfig:
             for e in errors:
                 print("  - ", e)
             sys.exit(1)
-
-    # Spanish aliases were removed; names are English-only now

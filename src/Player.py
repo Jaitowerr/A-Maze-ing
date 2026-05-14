@@ -8,6 +8,16 @@ class Player():
         self._img = img
 
     def render(self, m: Any, win: int, map: MazeGenerator) -> None:
+        """Draw the player image on the given window.
+
+        Args:
+            m: Mlx-like object with drawing methods.
+            win: Window identifier.
+            map: MazeGenerator holding pixel and grid info.
+
+        Returns:
+            None
+        """
         assert map.cfg.pixel is not None
         assert map.binary_grid is not None
         px = self._x * map.cfg.pixel - (len(
