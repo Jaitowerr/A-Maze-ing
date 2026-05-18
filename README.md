@@ -1,7 +1,7 @@
 *This project has been created as part of the 42 curriculum by jopajuel y aitorres*
 
 
-# A-Maze-ing
+# A-Maze-ing 
 tu propio generador de laberintos y muestra su resultado!
 
 
@@ -158,9 +158,9 @@ Renderiza el laberinto directamente en la terminal con caracteres de texto. Desd
 | Opción | Acción |
 | :--- | :--- |
 | `1` | Generar un nuevo laberinto |
-| `2` | Mostrar/ocultar el camino solución |
+| `2` | Mostrar/ocultar el camino solución - animado |
 | `3` | Cambiar color de las paredes (aleatorio) |
-| `4` | Cambiar color del fondo del "42" (si existe) / Cambiar estilo de pared |
+| `4` | Cambiar color del fondo del "42" (si existe) y el camino / Cambiar estilo de pared |
 | `5` | Cambiar estilo de pared (si el "42" está activo) |
 | `q` | Salir |
 
