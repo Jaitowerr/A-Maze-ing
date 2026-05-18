@@ -91,7 +91,7 @@ def ascii_menu(gen: MazeGenerator) -> bool:
     color_grid = '\033[34m'
     color_bg_way = '\033[33m'
     true_false = False
-    iconos = {
+    icons = {
         'PARED_H': '---', 'PARED_V': '|', 'ESQUINA': '+'
     }
     number = 3
@@ -113,7 +113,7 @@ def ascii_menu(gen: MazeGenerator) -> bool:
             from .maze_generator import MazeGenerator
             gen = MazeGenerator(gen.cfg)
             color_grid, color_bg_way = gen.print_maze(
-                color_grid, color_bg_way, iconos)
+                color_grid, color_bg_way, icons)
             gen.write_output()
             print_menu(gen)
             true_false = False
@@ -123,11 +123,11 @@ def ascii_menu(gen: MazeGenerator) -> bool:
             print('\n\nPressed 2, toggling solution path\n')
             if not true_false:
                 color_grid, color_bg_way = gen.print_maze_path(
-                    color_grid, color_bg_way, iconos)
+                    color_grid, color_bg_way, icons, animate=True, delay=0.08)
                 true_false = True
             else:
                 color_grid, color_bg_way = gen.print_maze(
-                    color_grid, color_bg_way, iconos)
+                    color_grid, color_bg_way, icons)
                 true_false = False
             print_menu(gen)
 
@@ -141,10 +141,10 @@ def ascii_menu(gen: MazeGenerator) -> bool:
 
             if true_false:
                 color_grid, color_bg_way = gen.print_maze_path(
-                    color_grid, color_bg_way, iconos)
+                    color_grid, color_bg_way, icons)
             else:
                 color_grid, color_bg_way = gen.print_maze(
-                    color_grid, color_bg_way, iconos)
+                    color_grid, color_bg_way, icons)
             print_menu(gen)
 
         elif option == '4':
@@ -158,23 +158,23 @@ def ascii_menu(gen: MazeGenerator) -> bool:
 
                 if true_false:
                     color_grid, color_bg_way = gen.print_maze_path(
-                        color_grid, color_bg_way, iconos)
+                        color_grid, color_bg_way, icons)
                 else:
                     color_grid, color_bg_way = gen.print_maze(
-                        color_grid, color_bg_way, iconos)
+                        color_grid, color_bg_way, icons)
             else:
                 print('\n\nPressed 4, changing map style\n')
                 number2 = random.randint(1, 10)
                 while number == number2:
                     number2 = random.randint(1, 10)
                 number = number2
-                iconos = _get_style_chars(number)
+                icons = _get_style_chars(number)
                 if true_false:
                     color_grid, color_bg_way = gen.print_maze_path(
-                        color_grid, color_bg_way, iconos)
+                        color_grid, color_bg_way, icons)
                 else:
                     color_grid, color_bg_way = gen.print_maze(
-                        color_grid, color_bg_way, iconos)
+                        color_grid, color_bg_way, icons)
             print_menu(gen)
 
         elif option == '5' and gen.cfg.center_42:
@@ -184,13 +184,13 @@ def ascii_menu(gen: MazeGenerator) -> bool:
             while number == number2:
                 number2 = random.randint(1, 10)
             number = number2
-            iconos = _get_style_chars(number)
+            icons = _get_style_chars(number)
             if true_false:
                 color_grid, color_bg_way = gen.print_maze_path(
-                    color_grid, color_bg_way, iconos)
+                    color_grid, color_bg_way, icons)
             else:
                 color_grid, color_bg_way = gen.print_maze(
-                    color_grid, color_bg_way, iconos)
+                    color_grid, color_bg_way, icons)
             print_menu(gen)
 
         else:

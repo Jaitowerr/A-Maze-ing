@@ -3,6 +3,8 @@ from .Celda import Cell
 from .Direcccion import Direction
 from collections import deque
 from typing import Optional, Any
+import os
+import time
 
 
 class MazeGenerator:
@@ -249,30 +251,25 @@ class MazeGenerator:
             print(line_floor)
         return color_grid, color_bg_way
 
-    def print_maze_path(self,
-                        color_grid: str = '\033[32m',
-                        color_bg_way: str = '\033[35m',
-                        icons: Optional[dict[str, str]] = None) -> tuple[
-                            str, str]:
-        """Print the maze with the solution path highlighted.
-
-        Args:
-            color_grid: ANSI color for grid lines.
-            color_bg_way: ANSI color for the path background.
-            icons: Optional mapping of characters for drawing.
-
-        Returns:
-            A tuple with the used (color_grid, color_bg_way) strings.
-        """
+    def print_maze_path(
+            self,
+            color_grid: str = '\033[32m',
+            color_bg_way: str = '\033[35m',
+            icons: Optional[dict[str, str]] = None,
+            animate: bool = False,
+            delay: float = 0.08) -> tuple[str, str]:
         if icons is None:
             icons = {'PARED_H': '---', 'PARED_V': '|', 'ESQUINA': '+'}
         assert self.path is not None
         assert self.binary_grid is not None
+
         path_cells = {}
         sx, sy = self.cfg.entry_x_y
         x, y = sx, sy
+        path_steps = []
+
         for d in self.path:
-            path_cells[(x, y)] = d
+            path_steps.append(((x, y), d))
             if d == 'N':
                 y -= 1
             elif d == 'S':
@@ -281,60 +278,78 @@ class MazeGenerator:
                 x += 1
             elif d == 'O':
                 x -= 1
-        path_cells[(x, y)] = 'X'
 
-        wall_h = icons['PARED_H'] + color_grid
-        wall_v = icons['PARED_V'] + color_grid
-        corner = color_grid + icons['ESQUINA'] + color_grid
-        empty_cell_str = "   " + color_grid
-        entrance = color_bg_way + "STR" + color_grid
-        exit = color_bg_way + "FIN" + color_grid
-        p42 = color_bg_way + "\u2588\u2588\u2588" + color_grid
+        path_steps.append(((x, y), 'X'))
+        assert self.path is not None
+        assert self.binary_grid is not None
+        binary_grid = self.binary_grid
 
-        top_line = corner
-        for _ in range(len(self.binary_grid[0])):
-            top_line += wall_h + corner
-        print(top_line)
+        def render(path_cells: dict[tuple[int, int], str]) -> None:
+            wall_h = icons['PARED_H'] + color_grid
+            wall_v = icons['PARED_V'] + color_grid
+            corner = color_grid + icons['ESQUINA'] + color_grid
+            empty_cell_str = "   " + color_grid
+            entrance = color_bg_way + "STR" + color_grid
+            exit = color_bg_way + "FIN" + color_grid
+            p42 = color_bg_way + "\u2588\u2588\u2588" + color_grid
 
-        for cy in range(len(self.binary_grid)):
-            line_walls = wall_v
-            line_floor = corner
-            for cx in range(len(self.binary_grid[0])):
-                cell = self.get_cell(cx, cy)
+            top_line = corner
+            for _ in range(len(binary_grid[0])):
+                top_line += wall_h + corner
+            print(top_line)
 
-                if self.cfg.entry_x_y == [cx, cy]:
-                    content = entrance
-                elif self.cfg.exit_x_y == [cx, cy]:
-                    content = exit
-                elif cell.is_42:
-                    content = p42
-                elif (cx, cy) in path_cells:
-                    d = path_cells[(cx, cy)]
-                    if d == 'N':
-                        content = color_bg_way + ' ^ ' + color_grid
-                    elif d == 'S':
-                        content = color_bg_way + ' v ' + color_grid
-                    elif d == 'E':
-                        content = color_bg_way + ' \u00bb ' + color_grid
-                    elif d == 'O':
-                        content = color_bg_way + ' \u00ab ' + color_grid
+            for cy in range(len(binary_grid)):
+                line_walls = wall_v
+                line_floor = corner
+                for cx in range(len(binary_grid[0])):
+                    cell = self.get_cell(cx, cy)
+
+                    if self.cfg.entry_x_y == [cx, cy]:
+                        content = entrance
+                    elif self.cfg.exit_x_y == [cx, cy]:
+                        content = exit
+                    elif cell.is_42:
+                        content = p42
+                    elif (cx, cy) in path_cells:
+                        d = path_cells[(cx, cy)]
+                        if d == 'N':
+                            content = color_bg_way + ' ^ ' + color_grid
+                        elif d == 'S':
+                            content = color_bg_way + ' v ' + color_grid
+                        elif d == 'E':
+                            content = color_bg_way + ' » ' + color_grid
+                        elif d == 'O':
+                            content = color_bg_way + ' « ' + color_grid
+                        else:
+                            content = empty_cell_str
                     else:
                         content = empty_cell_str
-                else:
-                    content = empty_cell_str
 
-                if cell.walls[Direction.EAST]:
-                    line_walls += content + wall_v
-                else:
-                    line_walls += content + " "
+                    if cell.walls[Direction.EAST]:
+                        line_walls += content + wall_v
+                    else:
+                        line_walls += content + " "
 
-                if cell.walls[Direction.SOUTH]:
-                    line_floor += wall_h + corner
-                else:
-                    line_floor += empty_cell_str + corner
+                    if cell.walls[Direction.SOUTH]:
+                        line_floor += wall_h + corner
+                    else:
+                        line_floor += empty_cell_str + corner
 
-            print(line_walls)
-            print(line_floor)
+                print(line_walls)
+                print(line_floor)
+        if not animate:
+            for pos, d in path_steps:
+                path_cells[pos] = d
+            render(path_cells)
+            return color_grid, color_bg_way
+
+        path_cells = {}
+        for i, (pos, d) in enumerate(path_steps):
+            path_cells[pos] = d
+            os.system('clear')
+            render(path_cells)
+            if i < len(path_steps) - 1:
+                time.sleep(delay)
 
         return color_grid, color_bg_way
 
