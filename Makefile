@@ -25,7 +25,7 @@ run: deps
 	@poetry run python3 a_maze_ing.py config.txt
 	@echo "\033[31m"
 	@$(MAKE) clean
-	@echo "\nFIN DE PROGRAMA - HASTA PRONTO!"
+	@echo "\nEND OF PROGRAM - SEE YOU SOON!"
 
 debug: deps
 	@clear
