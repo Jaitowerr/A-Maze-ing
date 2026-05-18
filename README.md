@@ -1,15 +1,9 @@
+*This project has been created as part of the 42 curriculum by jopajuel y aitorres*
+
+
 # A-Maze-ing
 tu propio generador de laberintos y muestra su resultado!
 
-oetry init → crea pyproject.toml
-poetry lock → poetry.lock basado en lo que tienes en pyproject.toml.
-poetry show → ver dependencias
-poetry add X → añadir una dependencia
-poetry install → instalar todo
-poetry check → comprobar configuración
-poetry remove nombre_del_paquete → Para desinstalar dependencias
-
-*This project has been created as part of the 42 curriculum by jopajuelo y aitorres*
 
 ## Description
 
@@ -249,7 +243,7 @@ poetry remove nombre_del_paquete → Para desinstalar dependencias
 - [Recursive backtracker](https://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_backtracker)
 - [BFS — Breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search)
 - [Python typing — mypy docs](https://mypy.readthedocs.io/en/stable/)
-- [PEP 484 — Type Hints](https://peps.python.org/pep-0484/)
+- [PEP 257 — Type Hints](https://peps.python.org/pep-0257/#multi-line-docstrings)
 
 ### AI Usage Disclosure
 
@@ -268,7 +262,7 @@ Todo el código generado o modificado con ayuda de IA ha sido revisado, entendid
 
 ### Roles
 
-- **[jopajuelo]**: Parseo, algoritmo recursive backtracking, algoritmo de solución, representación ASCII y archivo de salida.
+- **[jopajuel]**: Parseo, algoritmo recursive backtracking, algoritmo de solución, representación ASCII y archivo de salida.
 - **[aitorres]**: Parseo, algoritmo Kruskal, representación MiniLibX(reparación código, diseño y jugueteo), eventos de teclado, Player y GameControl.
 
 ### Planning
