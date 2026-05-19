@@ -31,3 +31,4 @@ dist/
 
 # salida
 maze.txt
+.gitignore

@@ -1,23 +1,23 @@
-[project]
+[tool.poetry]
 name = "a-maze-ing"
 version = "1.0.0"
 description = "Maze generator for 42"
-authors = [
-    {name = "Your Name",email = "you@example.com"}
-]
+authors = ["Your Name <you@example.com>"]
 readme = "README.md"
-requires-python = ">=3.10"
-dependencies = [
-]
+license = "MIT"
 
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.3.0"
+mypy = "^1.20.2"
+pytest = "^9.0.3"
+
+# Esta línea es crucial para incluir tus módulos dentro de src/
+[[tool.poetry.packages]]
+include = "src"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[dependency-groups]
-dev = [
-    "flake8 (>=7.3.0,<8.0.0)",
-    "mypy (>=1.20.2,<2.0.0)",
-    "pytest (>=9.0.3,<10.0.0)"
-]
